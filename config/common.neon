@@ -1,0 +1,28 @@
+parameters:
+
+
+application:
+	errorPresenter: Auxiliary:Error
+	mapping:
+		*: App\Module\*\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+
+di:
+	export:
+		parameters: no
+		tags: no
+extensions:
+	translation: Contributte\Translation\DI\TranslationExtension
+
+translation:
+	locales:
+		whitelist: [en, cs]
+		default: en
+		fallback: [cs, en]
+	dirs:
+		- %appDir%/lang
+	returnOriginalMessage: true

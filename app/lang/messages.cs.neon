@@ -1,0 +1,45 @@
+signInForm:
+    email: 'Email:'
+    password: 'Heslo:'
+    remember: 'Pamatovat si mě'
+    signIn: 'Přihlásit se'
+    incorrect: 'Nesprávný email nebo heslo.'
+
+signUpForm:
+    locationImage: "Obrázek provozovny"
+    enter_location_name: "Prosím, zadejte název provozovny."
+    enter_location_description: "Prosím, zadejte popis provozovny."
+    passwordDescription: 'alespoň %d znaků'
+    signUp: 'Zaregistrovat se'
+    usernameTaken: 'Uživatelské jméno je již obsazeno.'
+    role: "Role"
+    username: "Vyberte uživatelské jméno:"
+    email: "Váš email:"
+    password: "Vytvořte heslo:"
+    image: "Obrázek"
+    description: "Popis"
+    locationName: "Název provozovny"
+    locationDescription: "Popis provozovny"
+    location: "Provozovna"
+    select_location: "Vyberte provozovnu"
+    submit: "Zaregistrovat se"
+    enter_username: "Zadejte uživatelské jméno."
+    enter_email: "Zadejte email."
+    enter_password: "Zadejte heslo."
+    chiefDescription: "Registrace šéfa provozovny"
+    adminDescription: "Registrace administrátora"
+    workerDescription: "Registrace pracovníka"
+    clientDescription: "Registrace klienta"
+    title: "Registrace"
+    phone: "Vaše telefonní číslo:"
+    enter_phone: "Prosím, zadejte telefonní číslo."
+
+general:
+    protection: 'Prosím znovu odeslat formulář (vypršela platnost ochrany).'
+
+
+roles:
+    client: "Klient"
+    worker: "Pracovník"
+    chief: "Šéf"
+    administrator: "Administrátor"

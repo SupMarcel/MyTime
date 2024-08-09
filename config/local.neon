@@ -1,0 +1,7 @@
+parameters:
+
+
+database:
+	dsn: 'mysql:host=localhost;dbname=mytime'
+	user: daniel
+	password: 'Bubovice258,'

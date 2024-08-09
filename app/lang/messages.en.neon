@@ -1,0 +1,46 @@
+signInForm:
+    email: 'Email:'
+    password: 'Password:'
+    remember: 'Keep me signed in'
+    signIn: 'Sign in'
+    incorrect: 'The email or password you entered is incorrect.'
+
+signUpForm:
+    locationImage: "Location Image"
+    enter_location_name: "Please enter the location name."
+    enter_location_description: "Please enter the location description."
+    passwordDescription: 'at least %d characters'
+    signUp: 'Sign up'
+    usernameTaken: 'Username is already taken.'
+    role: "Role"
+    username: "Select a username:"
+    email: "Your email:"
+    password: "Create a password:"
+    image: "Image"
+    description: "Description"
+    locationName: "Location Name"
+    locationDescription: "Location Description"
+    location: "Location"
+    select_location: "Select location"
+    submit: "Sign Up"
+    enter_username: "Please enter a username."
+    enter_email: "Please enter an email."
+    enter_password: "Please enter a password."    
+    chiefDescription: "Chief Registration"
+    adminDescription: "Admin Registration"
+    workerDescription: "Worker Registration"
+    clientDescription: "Client Registration"
+    title: "Sign Up"
+    phone: "Your phone number:"
+    enter_phone: "Please enter a phone number."
+
+general:
+    protection: 'Please submit the form again (the security protection expired).'
+
+
+roles:
+    client: "Client"
+    worker: "Worker"
+    chief: "Chief"
+    administrator: "Administrator"
+

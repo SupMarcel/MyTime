@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/FormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/DashboardPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/composer.json</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerRequireLoggedUser.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/templates/ChiefRegistration/signUp.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Bootstrap.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/BaseRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/.htaccess</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/ClientRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/ChiefRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/UserModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/config/common.neon</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/templates/ClientRegistration/signUp.latte</file>
+            <file>file:/var/www/html/my-time-for-you/config/services.neon</file>
+            <file>file:/var/www/html/my-time-for-you/config/local.neon</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/LanguageModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/templates/AdminRegistration/signUp.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/UserFacade.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/BaseModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/ChiefDashboardPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Services/UserService.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/ClientRequireLoggedUser.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/AdminRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/SignInFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/ChiefRequireLoggedUser.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Router/RouterFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/lang/messages.en.neon</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/RequireLoggedUser.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/templates/AdminRegistration/signIn.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/WorkerRegistration/signUp.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/AdressModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/SignUpFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/ClientDashboardPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/lang/messages.cs.neon</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerDashboardPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/templates/ChiefRegistration/signIn.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/templates/ClientRegistration/signIn.latte</file>
+            <file>file:/var/www/html/my-time-for-you/www/.htaccess</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/WorkerRegistration/signIn.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/BaseDashboardPresenter.php</file>
+        </group>
+    </open-files>
+</project-private>
