@@ -6,28 +6,27 @@ namespace App\Module\Client\Presenters;
 
 use Nette\Application\UI\Form;
 use App\Common\Presenters\BaseRegistrationPresenter;
-use App\Forms\SignUpFormFactory;
+use App\Forms\ClientSignUpFormFactory;
 use App\Model\UserFacade;
 use Contributte\Translation\Translator;
-use Nette\Database\Table\ActiveRow;
 
 final class ClientRegistrationPresenter extends BaseRegistrationPresenter
 {
-    protected SignUpFormFactory $signUpFactory;
+    protected ClientSignUpFormFactory $clientSignUpFactory;
 
     public function __construct(
-        SignUpFormFactory $signUpFactory,
+        ClientSignUpFormFactory $clientSignUpFactory,
         UserFacade $userFacade,
         Translator $translator
     ) {
         parent::__construct($translator, $userFacade);
-        $this->signUpFactory = $signUpFactory;
+        $this->clientSignUpFactory = $clientSignUpFactory;
     }
 
     protected function createComponentSignUpForm(): Form
     {
         $user = $this->getUserData();
-        return $this->signUpFactory->createClientForm(function () {
+        return $this->clientSignUpFactory->createClientForm(function () {
             $this->flashMessage('Registration successful.', 'success');
             $this->redirect('Homepage:');
         }, $user);
@@ -35,7 +34,7 @@ final class ClientRegistrationPresenter extends BaseRegistrationPresenter
 
     protected function createComponentSignInForm(): Form
     {
-        return $this->signUpFactory->createSignInForm(function () {
+        return $this->clientSignUpFactory->createSignInForm(function () {
             $this->flashMessage('Sign in successful.', 'success');
             $this->redirect('Homepage:');
         });
@@ -46,3 +45,4 @@ final class ClientRegistrationPresenter extends BaseRegistrationPresenter
         // Specifická logika pro registraci klienta
     }
 }
+

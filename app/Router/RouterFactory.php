@@ -14,6 +14,11 @@ final class RouterFactory
     public static function createRouter(): RouteList
     {
         $router = new RouteList;
+        
+           // Přidání trasy pro WorkerCalendarPresenter
+        $router->addRoute('worker/calendar', 'Worker:WorkerCalendar:default');
+        
+        $router->addRoute('', 'Common:HomePage:default');
 
         // Admin registration routes
         $router->addRoute('admin/register', [
@@ -65,8 +70,8 @@ final class RouterFactory
 
         // General routes
         $router->addRoute('<module>/<presenter>/<action>', [
-            'module' => 'Homepage',
-            'presenter' => 'Homepage',
+            'module' => 'Common',
+            'presenter' => 'HomePage',
             'action' => 'default'
         ]);
 

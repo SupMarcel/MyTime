@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use Nette\Database\Table\ActiveRow;
+
 class AddressModel extends BaseModel
 {
     const TABLE_NAME = 'addresses';
@@ -15,13 +17,24 @@ class AddressModel extends BaseModel
     const COLUMN_LONGITUDE = 'longitude';
     const COLUMN_LATITUDE = 'latitude';
 
+    // Všechny funkce jsou děděny z BaseModelu
+
+    // Například: Přidání adresy
     public function addAddress(array $data): ActiveRow
     {
-        return $this->database->table(self::TABLE_NAME)->insert($data);
+        return $this->add($data);
     }
 
-    public function findBy(array $criteria): ?ActiveRow
+    // Například: Aktualizace adresy
+    public function updateAddress(int $addressId, array $data): void
     {
-        return $this->database->table(self::TABLE_NAME)->where($criteria)->fetch();
+        $this->update($addressId, $data);
+    }
+
+    // Například: Vymazání adresy
+    public function deleteAddress(int $addressId): void
+    {
+        $this->delete($addressId);
     }
 }
+

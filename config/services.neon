@@ -2,5 +2,17 @@ services:
 	- App\Model\UserFacade
 	- App\Forms\FormFactory
 	- App\Forms\SignInFormFactory
-	- App\Forms\SignUpFormFactory
 	- App\Router\RouterFactory::createRouter
+	- App\Module\Common\Security\SimpleAuthenticator
+	- App\Model\RoleModel
+	- App\Model\LocationModel
+	- App\Model\AdminModel
+	- App\Model\WorkerModel
+	- App\Model\ClientModel
+	- App\Model\ChiefModel
+	- App\Model\UserModel
+	- App\Forms\ClientSignUpFormFactory
+	- App\Forms\WorkerSignUpFormFactory
+	- App\Forms\ChiefSignUpFormFactory
+	- App\Forms\AdminSignUpFormFactory
+	- App\Model\TimeSlotModel

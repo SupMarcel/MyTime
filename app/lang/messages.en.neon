@@ -1,9 +1,5 @@
-signInForm:
-    email: 'Email:'
-    password: 'Password:'
-    remember: 'Keep me signed in'
-    signIn: 'Sign in'
-    incorrect: 'The email or password you entered is incorrect.'
+
+defaultLocation: "Work at Customer's Location"
 
 signUpForm:
     locationImage: "Location Image"
@@ -44,3 +40,24 @@ roles:
     chief: "Chief"
     administrator: "Administrator"
 
+homepage:
+    title: "My Time for You"
+    description: "This project helps manage and book appointments for massage therapists."
+    signInTitle: "Sign In"
+    loggedInAs: "You are logged in as"
+    clientRegistration: "Client Registration"
+    clientDescription: "Register to be able to book appointments."
+    workerRegistration: "Worker Registration"
+    workerDescription: "Register to manage your work hours."
+    chiefRegistration: "Chief Registration"
+    chiefDescription: "Register to manage your location."
+    adminRegistration: "Admin Registration"
+    adminDescription: "Register to manage the entire system."
+    logout: "Log Out"
+
+signinForm:
+        email: "E-mail"
+        password: "Password"
+        remember: "Remember me"
+        signIn: "Sign In"
+        incorrect: "Incorrect e-mail or password."

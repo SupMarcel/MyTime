@@ -7,7 +7,7 @@ namespace App\Common\Presenters;
 use Nette;
 use App\Model\UserFacade;
 use Contributte\Translation\Translator;
-use Nette\Database\Table\ActiveRow;
+
 
 abstract class BaseRegistrationPresenter extends Nette\Application\UI\Presenter
 {
@@ -21,10 +21,12 @@ abstract class BaseRegistrationPresenter extends Nette\Application\UI\Presenter
         $this->userFacade = $userFacade;
     }
 
-    protected function getUserData(): ?ActiveRow
+    
+        protected function getUserData(): ?array
     {
         if ($this->getUser()->isLoggedIn()) {
-            return $this->userFacade->findBy(['email' => $this->getUser()->getIdentity()->email]);
+            $userId = $this->getUser()->getId(); // Získání ID přihlášeného uživatele
+            return $this->userFacade->getUserBasicInfo($userId); // Použití funkce z UserFacade pro získání základních informací
         }
         return null;
     }

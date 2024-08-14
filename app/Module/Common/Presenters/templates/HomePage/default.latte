@@ -1,0 +1,64 @@
+{block head}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{/block}
+
+{block content}
+    <h1>{$translator->translate('messages.homepage.title')}</h1>
+
+    <p>{$translator->translate('messages.homepage.description')}</p>
+
+    {if $user->isLoggedIn()}
+        <div class="alert alert-info">
+            {$translator->translate('messages.homepage.loggedInAs')} {$userName}
+        </div>
+    {else}
+        <div class="sign-in-form">
+            <h2>{$translator->translate('messages.homepage.signInTitle')}</h2>
+            {control signInForm}
+        </div>
+    {/if}
+
+    <div class="registration-buttons">
+        {if !$isClient}
+            <div>
+                <a href="{link ':Client:ClientRegistration:signUp'}" class="btn btn-primary">
+                    {$translator->translate('messages.homepage.clientRegistration')}
+                </a>
+                <p>{$translator->translate('messages.homepage.clientDescription')}</p>
+            </div>
+        {/if}
+
+        {if !$isWorker}
+            <div>
+                <a href="{link ':Worker:WorkerRegistration:signUp'}" class="btn btn-primary">
+                    {$translator->translate('messages.homepage.workerRegistration')}
+                </a>
+                <p>{$translator->translate('messages.homepage.workerDescription')}</p>
+            </div>
+        {/if}
+
+        {if !$isChief}
+            <div>
+                <a href="{link ':Chief:ChiefRegistration:signUp'}" class="btn btn-primary">
+                    {$translator->translate('messages.homepage.chiefRegistration')}
+                </a>
+                <p>{$translator->translate('messages.homepage.chiefDescription')}</p>
+            </div>
+        {/if}
+
+        {if !$isAdmin}
+            <div>
+                <a href="{link ':Admin:AdminRegistration:signUp'}" class="btn btn-primary">
+                    {$translator->translate('messages.homepage.adminRegistration')}
+                </a>
+                <p>{$translator->translate('messages.homepage.adminDescription')}</p>
+            </div>
+        {/if}
+    </div>
+
+    {if $user->isLoggedIn()}
+        <a href="{link 'Sign:out'}" class="btn btn-danger">
+            {$translator->translate('messages.homepage.logout')}
+        </a>
+    {/if}
+{/block}

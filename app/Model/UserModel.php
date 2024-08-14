@@ -12,6 +12,7 @@ class UserModel extends BaseModel
     const COLUMN_USERNAME = 'username';
     const COLUMN_EMAIL = 'email';
     const COLUMN_PASSWORD = 'password';
+    const COLUMN_PHONE = 'phone';
     const COLUMN_LOCATION_ID = 'location_id';
     const COLUMN_APPROVED = 'approved';
     const COLUMN_BANNED = 'banned';
@@ -56,45 +57,39 @@ class UserModel extends BaseModel
         return $this->updateUser($id, [self::COLUMN_BANNED => 0]);
     }
 
-    public function getUsersByRole(string $role): Selection
-    {
-        return $this->database->table('user_roles')
-            ->where('role', $role)
-            ->fetchAll();
-    }
-
-    public function getUserRoles(int $userId): array
-    {
-        return $this->database->table('user_roles')
-            ->where('user_id', $userId)
-            ->fetchPairs('role_id', 'role_id');
-    }
-
-    public function addRole(int $userId, string $roleName): void
-    {
-        $role = $this->database->table('roles')->where('name', $roleName)->fetch();
-        if ($role) {
-            $this->database->table('user_roles')->insert([
-                'user_id' => $userId,
-                'role_id' => $role->id,
-            ]);
-        }
-    }
-
-    public function removeRole(int $userId, string $roleName): void
-    {
-        $role = $this->database->table('roles')->where('name', $roleName)->fetch();
-        if ($role) {
-            $this->database->table('user_roles')
-                ->where('user_id', $userId)
-                ->where('role_id', $role->id)
-                ->delete();
-        }
-    }
-    
     public function getUserData(int $userId): array
     {
         $user = $this->database->table(self::TABLE_NAME)->get($userId);
         return $user ? $user->toArray() : [];
+    }
+
+    /**
+     * Vyhledá uživatele podle telefonního čísla.
+     */
+    public function findUserByPhone(string $phone): ?ActiveRow
+    {
+        return $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_PHONE, $phone)
+            ->fetch();
+    }
+
+    /**
+     * Vyhledá uživatele podle emailu.
+     */
+    public function findUserByEmail(string $email): ?ActiveRow
+    {
+        return $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_EMAIL, $email)
+            ->fetch();
+    }
+
+    /**
+     * Vyhledá uživatele podle jména.
+     */
+    public function findUserByUsername(string $username): ?ActiveRow
+    {
+        return $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_USERNAME, $username)
+            ->fetch();
     }
 }

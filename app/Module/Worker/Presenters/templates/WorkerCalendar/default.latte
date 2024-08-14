@@ -1,0 +1,121 @@
+{block content}
+<h1>Worker Calendar</h1>
+
+<div id="calendar">
+    <!-- Kalendář bude generován zde -->
+    {foreach $organizedSlots as $calendarTitle => $weeks}
+        <h2>{$calendarTitle}</h2>
+        <div class="calendar">
+            {foreach $weeks as $week => $days}
+                <div class="week">
+                    <h3>Week {$week}</h3>
+                    <div class="days">
+                        {foreach $days as $day => $slots}
+                            <div class="day">
+                                <a href="#" class="day-link" data-day="{$day}">{$day}</a>
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+    {/foreach}
+</div>
+
+<div id="slots">
+    <h3>Time Slots for <span id="selectedDay"></span></h3>
+    <div id="slotList" class="slots"></div>
+</div>
+
+<style>
+    .calendar {
+        display: flex;
+        flex-direction: column;
+        margin: 20px;
+    }
+    .week {
+        margin-bottom: 20px;
+    }
+    .days {
+        display: flex;
+    }
+    .day {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+    .day-link {
+        text-decoration: none;
+        color: #007BFF;
+    }
+    .day-link:hover {
+        text-decoration: underline;
+    }
+    .slots {
+        display: none;
+        margin-top: 20px;
+    }
+    .slot {
+        padding: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 5px;
+    }
+</style>
+
+<script>
+document.querySelectorAll('.day-link').forEach(function(link) {
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+        
+        const day = event.target.getAttribute('data-day');
+        document.getElementById('selectedDay').innerText = day;
+        
+        const slots = {json_encode($organizedSlots)|noescape};
+        console.log("Slots object:", slots);
+
+        const mainKey = {$calendarTitle};  // Toto můžete dynamicky vytvořit, pokud máte více workerů
+        console.log("Available weeks:", Object.keys(slots[mainKey]));
+
+        // Extrahujte datum z day a vypočítejte správné číslo týdne
+        const dateParts = day.split('_')[1]; // Očekává se formát YYYYMMDD
+        const dateObj = new Date(dateParts.substring(0, 4), dateParts.substring(4, 6) - 1, dateParts.substring(6, 8));
+        const weekNumber = getWeekNumber(dateObj);
+        
+        const weekKey = Object.keys(slots[mainKey]).find(week => week.includes("week_" + weekNumber));
+
+        if (!weekKey) {
+            console.error('Invalid week key:', weekKey);
+            return;
+        }
+
+        if (slots[mainKey] && slots[mainKey][weekKey] && slots[mainKey][weekKey][day]) {
+            const slotList = slots[mainKey][weekKey][day];
+            const slotListContainer = document.getElementById('slotList');
+            slotListContainer.innerHTML = '';
+
+            for (const timeSlot in slotList) {
+                const slotDiv = document.createElement('div');
+                slotDiv.classList.add('slot');
+                slotDiv.textContent = timeSlot;
+                slotListContainer.appendChild(slotDiv);
+            }
+            
+            document.getElementById('slotList').style.display = 'block';
+            document.getElementById('slots').style.display = 'block';
+        } else {
+            console.error("Keys not found in slots object:", mainKey, weekKey, day);
+        }
+    });
+});
+
+// Funkce pro výpočet čísla týdne
+function getWeekNumber(d) {
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    return weekNo;
+}
+</script>
+{/block}

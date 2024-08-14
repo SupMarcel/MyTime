@@ -6,40 +6,33 @@ namespace App\Module\Chief\Presenters;
 
 use Nette\Application\UI\Form;
 use App\Common\Presenters\BaseRegistrationPresenter;
-use App\Forms\SignUpFormFactory;
+use App\Forms\ChiefSignUpFormFactory; // Změněno z SignUpFormFactory na ChiefSignUpFormFactory
 use App\Model\UserFacade;
 use Contributte\Translation\Translator;
-use Nette\Database\Table\ActiveRow;
 
 final class ChiefRegistrationPresenter extends BaseRegistrationPresenter
 {
-    protected SignUpFormFactory $signUpFactory;
+    protected ChiefSignUpFormFactory $chiefSignUpFactory;
 
     public function __construct(
-        SignUpFormFactory $signUpFactory,
+        ChiefSignUpFormFactory $chiefSignUpFactory, // Použijeme správnou továrnu pro šéfy
         UserFacade $userFacade,
         Translator $translator
     ) {
         parent::__construct($translator, $userFacade);
-        $this->signUpFactory = $signUpFactory;
+        $this->chiefSignUpFactory = $chiefSignUpFactory;
     }
 
     protected function createComponentSignUpForm(): Form
     {
         $user = $this->getUserData();
-        return $this->signUpFactory->createChiefForm(function () {
+        return $this->chiefSignUpFactory->create(function () {
             $this->flashMessage('Registration successful.', 'success');
-            $this->redirect('Homepage:');
+            $this->redirect(':Common:HomePage:default');
         }, $user);
     }
 
-    protected function createComponentSignInForm(): Form
-    {
-        return $this->signUpFactory->createSignInForm(function () {
-            $this->flashMessage('Sign in successful.', 'success');
-            $this->redirect('Homepage:');
-        });
-    }
+    
 
     public function renderSignUp(): void
     {

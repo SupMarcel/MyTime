@@ -1,9 +1,5 @@
-signInForm:
-    email: 'Email:'
-    password: 'Heslo:'
-    remember: 'Pamatovat si mě'
-    signIn: 'Přihlásit se'
-    incorrect: 'Nesprávný email nebo heslo.'
+
+defaultLocation: "Práce u zákazníka"
 
 signUpForm:
     locationImage: "Obrázek provozovny"
@@ -43,3 +39,25 @@ roles:
     worker: "Pracovník"
     chief: "Šéf"
     administrator: "Administrátor"
+
+homepage:
+    title: "Můj čas pro tebe"
+    description: "Tento projekt slouží k usnadnění správy a rezervací schůzek pro maséry."
+    signInTitle: "Přihlášení"
+    loggedInAs: "Jste přihlášen jako"
+    clientRegistration: "Registrace klienta"
+    clientDescription: "Registrace vám umožní rezervovat schůzky."
+    workerRegistration: "Registrace pracovníka"
+    workerDescription: "Registrace vám umožní spravovat své pracovní časy."
+    chiefRegistration: "Registrace šéfa provozovny"
+    chiefDescription: "Registrace vám umožní spravovat provozovnu."
+    adminRegistration: "Registrace administrátora"
+    adminDescription: "Registrace vám umožní spravovat celý systém."
+    logout: "Odhlásit se"
+
+signInForm:
+    email: "Emailová adresa"
+    password: "Heslo"
+    remember: "Zapamatovat si mě"
+    signIn: "Přihlásit se"
+    incorrect: "Neplatné přihlašovací údaje, zkuste to znovu."
