@@ -28,6 +28,7 @@
             <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/ClientDashboardPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/SignPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerDashboardPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/WorkerCalendar/default.latte</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/RoleModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/templates/ChiefRegistration/signUp.latte</file>
             <file>file:/var/www/html/my-time-for-you/app/Bootstrap.php</file>
@@ -38,6 +39,7 @@
             <file>file:/var/www/html/my-time-for-you/app/Model/UserModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/HomePagePresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/WorkerModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerCalendarPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/config/local.neon</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerRegistrationPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/LanguageModel.php</file>

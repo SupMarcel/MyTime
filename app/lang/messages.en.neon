@@ -61,3 +61,23 @@ signinForm:
         remember: "Remember me"
         signIn: "Sign In"
         incorrect: "Incorrect e-mail or password."
+
+WorkerCalendarPresenter:
+    title: "Worker Calendar"
+    from: "from"
+    to: "to"
+    month:
+        august: "August"
+
+WorkerCalendarLatte:
+    week: "Week"
+    time_slots_for: "Time Slots for"
+days:
+        mo: "Mo"
+        tu: "Tu"
+        we: "We"
+        th: "Th"
+        fr: "Fr"
+        sa: "Sa"
+        su: "Su"
+

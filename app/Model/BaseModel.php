@@ -54,5 +54,12 @@ abstract class BaseModel
             ->where(static::COLUMN_ID, $id)
             ->delete();
     }
+
+    // Zjištění, zda je tabulka prázdná
+    public function isEmpty(): bool
+    {
+        return !$this->database->table(static::TABLE_NAME)->count('*');
+    }
 }
+
 

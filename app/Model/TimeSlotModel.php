@@ -20,21 +20,17 @@ class TimeSlotModel
     {
         // Generování časových slotů
         $this->generateTimeSlots();
-        bdump($workerId);
-
         // Získání a organizace časových slotů
         return $this->getTimeSlotsForNextTwoWeeks($workerId);
     }
 
     // Funkce pro generování časových slotů
-    public function generateTimeSlots(): void
+        public function generateTimeSlots(): void
     {
         // Zjistí nejnovější záznam v tabulce
         $latestSlot = $this->getLatestTimeSlot();
 
-        // Debugging: Kontrola posledního slotu
-        bdump($latestSlot);
-
+        
         // Pokud existuje platný záznam a jeho datum je novější než dnes, pokračujeme od něj
         if (!empty($latestSlot) && new \DateTime($latestSlot->end_time) > new \DateTime('today')) {
             $startDate = new \DateTime($latestSlot->end_time);
@@ -43,7 +39,6 @@ class TimeSlotModel
             $startDate = new \DateTime('today');
         }
 
-        
         // Generování časových slotů na 14 dní dopředu
         $endDate = (clone $startDate)->modify('+14 days');
 
@@ -55,6 +50,14 @@ class TimeSlotModel
 
             $slotIdentifier = $current->format('Ymd_His') . '_' . $endTime->format('His');
 
+            // Zkontrolujte, zda slot již existuje
+            $existingSlot = $this->database->table('time_slots')->where('slot_identifier', $slotIdentifier)->fetch();
+            if ($existingSlot) {
+                // Přeskočte tento slot a pokračujte dalším
+                $current = $endTime;
+                continue;
+            }
+
             $this->database->table('time_slots')->insert([
                 'start_time' => $current->format('Y-m-d H:i:s'),
                 'end_time' => $endTime->format('Y-m-d H:i:s'),
@@ -64,6 +67,7 @@ class TimeSlotModel
             $current = $endTime;
         }
     }
+
 
     public function getTimeSlotsForNextTwoWeeks(int $workerId): array
     {
@@ -75,8 +79,6 @@ class TimeSlotModel
             ->where('end_time < ?', $endDate->format('Y-m-d H:i:s'))
             ->order('start_time ASC')
             ->fetchAll();
-
-        bdump($slots); // Zkontrolujte, zda pole slots obsahuje data
 
         return $this->organizeSlotsIntoWeeks($slots, $workerId);
     }
@@ -98,7 +100,6 @@ class TimeSlotModel
 
         // Ošetření prázdného pole
         if (empty($slots)) {
-            bdump($slots);
             return $organizedSlots; // Vrátí prázdné pole, pokud nejsou žádné sloty
         }
 
@@ -106,9 +107,6 @@ class TimeSlotModel
         $firstSlot = reset($slots);
 
         if ($firstSlot) {
-            bdump("condition");
-            bdump($firstSlot); // Zde ověříme první slot
-
             $startDate = new \DateTime($firstSlot->start_time);
             $endDate = new \DateTime(end($slots)->end_time);
 
@@ -128,16 +126,10 @@ class TimeSlotModel
                 // Časový úsek jako klíč (např. '09:00-09:30')
                 $timeSlotKey = $dateTime->format('H:i') . '-' . $dateTime->modify('+30 minutes')->format('H:i');
 
-                bdump($weekNumber, 'Week Number'); // Zde ověříme číslo týdne
-                bdump($dayOfWeek, 'Day of Week');  // Zde ověříme den v týdnu
-                bdump($timeSlotKey, 'Time Slot Key'); // Zde ověříme klíč časového slotu
-
                 // Organizace do strukturovaného pole
                 $organizedSlots[$mainKey][$year . '_week_' . $weekNumber][$dayOfWeek][$timeSlotKey] = $slot;
             }
         }
-
-        bdump($organizedSlots); // Ověřte, zda je pole správně zorganizováno
 
         return $organizedSlots;
     }

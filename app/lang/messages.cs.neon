@@ -61,3 +61,23 @@ signInForm:
     remember: "Zapamatovat si mě"
     signIn: "Přihlásit se"
     incorrect: "Neplatné přihlašovací údaje, zkuste to znovu."
+
+WorkerCalendarPresenter:
+    title: "Kalendář pracovníka"
+    from: "od"
+    to: "do"
+    month:
+        august: "srpen"
+
+WorkerCalendarLatte:
+    week: "Týden"
+    time_slots_for: "Časové úseky pro"
+
+days:
+        mo: "Po"
+        tu: "Út"
+        we: "St"
+        th: "Čt"
+        fr: "Pá"
+        sa: "So"
+        su: "Ne"
