@@ -39,6 +39,22 @@ abstract class BaseModel
         return $this->database->table(static::TABLE_NAME)->insert($data);
     }
 
+    // Přidání nového záznamu a vrácení jeho ID
+    public function addAndReturnId(array $data): int
+    {
+        return $this->database->table(static::TABLE_NAME)->insert($data)->getPrimary();
+    }
+
+    // Přidání více záznamů a vrácení pole obsahujícího jejich ID
+    public function addMultipleAndReturnIds(array $rows): array
+    {
+        $ids = [];
+        foreach ($rows as $data) {
+            $ids[] = $this->addAndReturnId($data);
+        }
+        return $ids;
+    }
+
     // Aktualizace záznamu podle ID
     public function update(int $id, array $data): void
     {
@@ -55,11 +71,26 @@ abstract class BaseModel
             ->delete();
     }
 
+    // Vymazání více záznamů podle pole ID
+    public function deleteMultiple(array $ids): void
+    {
+        $this->database->table(static::TABLE_NAME)
+            ->where(static::COLUMN_ID, $ids)
+            ->delete();
+    }
+
+    // Vymazání všech záznamů v tabulce
+    public function deleteAll(): void
+    {
+        $this->database->table(static::TABLE_NAME)->delete();
+    }
+
     // Zjištění, zda je tabulka prázdná
     public function isEmpty(): bool
     {
         return !$this->database->table(static::TABLE_NAME)->count('*');
     }
 }
+
 
 

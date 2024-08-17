@@ -4,123 +4,88 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-final class YearModel extends BaseModel
+use Nette\Database\Explorer;
+
+class YearsModel extends BaseModel
 {
-    // Konstanty pro tabulku `years`
-    public const TABLE_NAME = 'years';
-    public const COLUMN_ID = 'id';
-    public const COLUMN_YEAR_NUMBER = 'year_number';
-    public const COLUMN_LEAP_YEAR = 'leap_year';
-    
-    // Pole přestupných roků
-    private $leapYears = [2024, 2028, 2032, 2036, 2040];
+    const TABLE_NAME = 'years';
 
-    /**
-     * Přidá nový rok do tabulky `years`.
-     *
-     * @param int $yearNumber
-     * @param int $leapYear
-     * @return ActiveRow
-     */
-    public function addYear(int $yearNumber): ActiveRow
+    // Přestupné roky na následujících 20 let
+    private array $leapYears = [
+        2024, 2028, 2032, 2036, 2040, 2044,
+    ];
+
+    // Třídní proměnné pro aktuální a následující rok
+    private int $currentYear;
+    private int $nextYear;
+
+    public function __construct(Explorer $database)
     {
-        // Zjistit, zda je rok přestupný
-        $isLeapYear = in_array($yearNumber, $this->leapYears) ? 1 : 0;
+        parent::__construct($database);
+        $this->initializeYears();
+    }
 
-        // Přidat nový záznam do tabulky years
-        return $this->add([
+    // Inicializace třídních proměnných
+    private function initializeYears(): void
+    {
+        $this->currentYear = (int)date('Y');
+        $this->nextYear = $this->currentYear + 1;
+    }
+
+    // Přidání nového roku do tabulky
+    public function addYear(int $yearNumber): int
+    {
+        $leapYear = in_array($yearNumber, $this->leapYears) ? 1 : 0;
+        return $this->addAndReturnId([
             'year_number' => $yearNumber,
-            'leap_year' => $isLeapYear,
+            'leap_year' => $leapYear,
         ]);
     }
-    
-     // Přidání dvou let
-    public function addYears(int $currentYear, int $nextYear): void
-    {
-        // Přidat aktuální rok
-        $this->addYear($currentYear);
 
-        // Přidat následující rok
-        $this->addYear($nextYear);
+    // Přidání aktuálního a následujícího roku, vrací pole s ID nově přidaných záznamů
+    public function addYears(int $startYear, int $endYear): array
+    {
+        $yearsData = [];
+        for ($year = $startYear; $year <= $endYear; $year++) {
+            $leapYear = in_array($year, $this->leapYears) ? 1 : 0;
+            $yearsData[] = [
+                'year_number' => $year,
+                'leap_year' => $leapYear,
+            ];
+        }
+        return $this->addMultipleAndReturnIds($yearsData);
     }
 
-    // Privátní metoda pro výpočet aktuálního a následujícího roku
-    private function getYears(): array
+    // Přidání následujícího roku, vrací ID přidaného záznamu
+    public function addNextYear(): int
     {
-        $currentYear = (int)date('Y');
-        $nextYear = $currentYear + 1;
-
-        return [$currentYear, $nextYear];
+        return $this->addYear($this->nextYear);
     }
 
-    // Volání metody addYears s výpočtem aktuálního a následujícího roku
-    public function addCurrentAndNextYear(): void
-    {
-        [$currentYear, $nextYear] = $this->getYears();
-        $this->addYears($currentYear, $nextYear);
-    }
-    
-    // Přidání pouze následujícího roku
-    public function addNextYear(): void
-    {
-        $nextYear = (int)date('Y') + 1;
-        $this->addYear($nextYear);
-    }
-    
+    // Metoda pro kontrolu a případné přidání aktuálního a následujícího roku
     public function checkAndAddYears(): array
     {
-        $currentYear = (int)date('Y');
-        $nextYear = $currentYear + 1;
-
-        // Pokud je tabulka prázdná
         if ($this->isEmpty()) {
-            $this->addYears($currentYear, $nextYear);
-            return [$currentYear, $nextYear];
-        }
+            return $this->addYears($this->currentYear, $this->nextYear);
+        } else {
+            $lastYearInDb = $this->getAll()->order('year_number DESC')->fetch()->year_number;
 
-        // Získejte poslední záznam v tabulce
-        $lastYear = $this->getAll()->order(self::COLUMN_YEAR_NUMBER . ' DESC')->fetch();
+            if ($lastYearInDb < $this->currentYear) {
+                return $this->addYears($this->currentYear, $this->nextYear);
+            } elseif ($lastYearInDb === $this->currentYear) {
+                return [$this->addNextYear()];
+            } elseif ($lastYearInDb === $this->nextYear) {
+                $secondLastYear = $this->getAll()->order('year_number DESC')->limit(1, 1)->fetch()->year_number;
 
-        if ($lastYear->year_number < $currentYear) {
-            // Pokud poslední rok v tabulce je menší než aktuální rok
-            $this->addYears($currentYear, $nextYear);
-            return [$currentYear, $nextYear];
-        } elseif ($lastYear->year_number == $currentYear) {
-            // Pokud poslední rok v tabulce je aktuální rok
-            $this->addYear($nextYear);
-            return [$nextYear];
-        } elseif ($lastYear->year_number == $nextYear) {
-            // Pokud poslední rok v tabulce je následující rok
-            $secondLastYear = $this->getAll()->order(self::COLUMN_YEAR_NUMBER . ' DESC')->limit(1, 1)->fetch();
-            
-            if ($secondLastYear && $secondLastYear->year_number != $currentYear) {
-                // Pokud předposlední záznam není aktuální rok
-                if (!$this->findBy([self::COLUMN_YEAR_NUMBER => $currentYear])) {
-                    $this->addYear($currentYear);
-                    return [$currentYear];
+                if ($secondLastYear !== $this->currentYear) {
+                    if (!$this->findBy(['year_number' => $this->currentYear])) {
+                        return [$this->addYear($this->currentYear)];
+                    }
                 }
             }
         }
 
-        // Pokud žádná z podmínek neplatí, neprovádí se žádná akce
         return [];
     }
-
-    /**
-     * Aktualizuje záznam v tabulce `years`.
-     *
-     * @param int $id
-     * @param int $yearNumber
-     * @param int $leapYear
-     * @return void
-     */
-    public function updateYear(int $id, int $yearNumber, int $leapYear): void
-    {
-        $data = [
-            self::COLUMN_YEAR_NUMBER => $yearNumber,
-            self::COLUMN_LEAP_YEAR => $leapYear,
-        ];
-
-        $this->update($id, $data);
-    }
 }
+

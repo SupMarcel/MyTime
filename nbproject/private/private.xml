@@ -45,6 +45,7 @@
             <file>file:/var/www/html/my-time-for-you/app/Model/LanguageModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/templates/AdminRegistration/signUp.latte</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/ChiefModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/YearModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/UserFacade.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/ChiefDashboardPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Services/UserService.php</file>
