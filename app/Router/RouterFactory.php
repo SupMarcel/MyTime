@@ -17,7 +17,9 @@ final class RouterFactory
         
            // Přidání trasy pro WorkerCalendarPresenter
         $router->addRoute('worker/calendar', 'Worker:WorkerCalendar:default');
-        
+        $router->addRoute('worker-calendar/addData', 'Worker:WorkerCalendar:addData');
+        $router->addRoute('worker-calendar/clearData', 'Worker:WorkerCalendar:clearData');
+
         $router->addRoute('', 'Common:HomePage:default');
 
         // Admin registration routes

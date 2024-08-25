@@ -7,7 +7,7 @@ namespace App\Module\Common\Presenters;
 use Nette\Application\UI\Form;
 use Contributte\Translation\Translator;
 
-final class HomePagePresenter extends \Nette\Application\UI\Presenter
+final class HomepagePresenter extends \Nette\Application\UI\Presenter
 {
     private Translator $translator;
     private \App\Forms\SignInFormFactory $signInFormFactory;
