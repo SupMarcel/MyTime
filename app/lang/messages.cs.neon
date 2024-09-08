@@ -81,3 +81,41 @@ days:
         fr: "Pá"
         sa: "So"
         su: "Ne"
+
+calendar:
+    header:
+      main: "Kalendář pro %s - %s"
+      dates: "od %s do %s"
+    
+dayModel:
+    dayOfWeek:
+        monday: "Pondělí"
+        tuesday: "Úterý"
+        wednesday: "Středa"
+        thursday: "Čtvrtek"
+        friday: "Pátek"
+        saturday: "Sobota"
+        sunday: "Neděle"
+    month:
+        january: "Leden"
+        february: "Únor"
+        march: "Březen"
+        april: "Duben"
+        may: "Květen"
+        june: "Červen"
+        july: "Červenec"
+        august: "Srpen"
+        september: "Září"
+        october: "Říjen"
+        november: "Listopad"
+        december: "Prosinec"
+
+    week: "Týden"
+    day:
+      mo: "Po"
+      tu: "Út"
+      we: "St"
+      th: "Čt"
+      fr: "Pá"
+      sa: "So"
+      su: "Ne"    

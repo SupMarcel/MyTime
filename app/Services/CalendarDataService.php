@@ -2,16 +2,15 @@
 
 namespace App\Service;
 
-use App\Model\BaseModelWithTranslator;
+use App\Model\BaseModel;
 use App\Model\YearModel;
 use App\Model\MonthModel;
 use App\Model\WeekModel;
 use App\Model\DayModel;
 use App\Model\TimeSlotModel;
 use Nette\Database\Explorer;
-use Nette\Localization\ITranslator;
 
-class CalendarDataService extends BaseModelWithTranslator
+class CalendarDataService extends BaseModel
 {
     protected YearModel $yearModel;
     protected MonthModel $monthModel;
@@ -25,10 +24,9 @@ class CalendarDataService extends BaseModelWithTranslator
         WeekModel $weekModel,
         DayModel $dayModel,
         TimeSlotModel $timeSlotModel,
-        Explorer $database,
-        ITranslator $translator
+        Explorer $database
     ) {
-        parent::__construct($database, $translator);
+        parent::__construct($database);
         $this->yearModel = $yearModel;
         $this->monthModel = $monthModel;
         $this->weekModel = $weekModel;
@@ -46,7 +44,7 @@ class CalendarDataService extends BaseModelWithTranslator
 
         foreach ($years as $year) {
             // Přidání měsíců pro daný rok a získání přidaných objektů měsíců
-            $months = $this->monthModel->addMonthsForYear($year->{YearModel::COLUMN_YEAR_NUMBER}, $year->{YearModel::COLUMN_ID});
+            $months = $this->monthModel->addMonthsForYear($year); // předáváme celý objekt $year
 
             // Generování dnů, týdnů a jejich vztahů
             $dayIds = $this->dayModel->generateDaysAndWeeksForMonths($months);
@@ -57,6 +55,7 @@ class CalendarDataService extends BaseModelWithTranslator
             }
         }
     }
+
 
     /**
      * Vymaže veškerá data z kalendářových tabulek v databázi.
@@ -71,3 +70,4 @@ class CalendarDataService extends BaseModelWithTranslator
         $this->yearModel->deleteAll();      // Vymazání všech let
     }
 }
+

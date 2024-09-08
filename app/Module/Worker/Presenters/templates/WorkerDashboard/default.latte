@@ -1,0 +1,153 @@
+<!-- Přidání odkazu na Bootstrap a externí CSS soubor v hlavičce šablony -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="{$basePath}/css/style.css" rel="stylesheet">
+<!-- Odkaz na jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Odkaz na nette.ajax.js -->
+
+<script src="{$basePath}/js/nette.ajax.js"></script>
+
+<div class="raw container">
+    <div class="calendar rowData">
+        <div class="header">
+            <div class="calendar-header m-2">
+                <h4>{$calendarStructure['calendar_title_main']}</h4>
+                <h5>{$calendarStructure['calendar_title_dates']}</h5>
+            </div>
+        </div>
+
+        <!-- Flex container pro týdny -->
+        <div class="week-complet">
+            {var $firstDayId = null} <!-- Inicializujeme proměnnou pro první den -->
+
+            {foreach $calendarStructure['months'] as $monthName => $weeks}
+                {foreach $weeks as $weekName => $days}
+                    <div class="week-column">
+                        <div class="month-name w-100">{$monthName}</div>
+                        <div class="week-name w-100">{$weekName}</div>
+
+                        {foreach $days as $dayId => $dayFormatted}
+                            {if $firstDayId === null} <!-- Uložení prvního dne -->
+                                {var $firstDayId = $dayId}
+                            {/if}
+                            <div class="day-name">
+                                <!-- Záložní signál v href pro případ, že JavaScript nebude dostupný  -->
+                                <a id="dayLink{$dayId}" n:href="getTimeSlots! $dayId " class="ajax">{$dayFormatted}</a>
+                            </div>
+                        {/foreach}
+                    </div>
+                {/foreach}
+            {/foreach}
+        </div>
+    </div>
+
+    <div class="time-slots">
+        <!-- Snippet pro časové sloty -->
+        <div n:snippet="timeSlotsSnippet">
+            {if isset($timeSlots) && $timeSlots}
+                <div class="time-slots-container">
+                    {foreach $timeSlots as $timeSlot}
+                        <div class="time-slot">
+                            {$timeSlot->show}
+                        </div>
+                    {/foreach}
+                </div>
+            {else}
+                <p>Pro tento den nejsou žádné časové sloty k dispozici.</p>
+            {/if}
+        </div>
+    </div>
+</div>
+
+<script>
+   // Funkce, která nahradí odkazy, odstraní signál a přidá onclick atribut
+    function replaceLinksWithJavaScript() {
+        // Najdeme všechny odkazy s třídou "ajax"
+        var links = document.querySelectorAll('.ajax');
+
+        links.forEach(function(link) {
+            // Získáme ID dne z atributu "id"
+            var dayId = link.id.replace('dayLink', '');  // Odebereme část "dayLink" a zůstane pouze ID
+
+            // Nahradíme href za # (prázdný odkaz s křížkem)
+            link.setAttribute('href', '#');
+            
+            // Přidáme onclick funkci pro JavaScriptové načítání
+            link.setAttribute('onclick', 'return loadTimeSlots(' + dayId + ');');
+        });
+        
+        $.nette.ajax({
+        url: {link getTimeSlots! $firstDayId},  // Použití dayIdInt pro URL
+        timeout: 10000,  // 10 sekund
+        cache: false,  // Zakázání cachování
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',  // Specifikace AJAX hlavičky
+            'Content-Type': 'application/json'     // Specifikace typu obsahu, pokud posíláš data
+        },
+        success: function() {
+            console.log('Časové sloty byly načteny pro den ID: ' + {$firstDayId});
+        },
+        error: function(xhr, status, error) {
+            console.error('Chyba při načítání časových slotů: ', error);
+        }
+    });
+    }
+
+    // Spuštění funkce po načtení stránky
+    window.onload = replaceLinksWithJavaScript;
+    
+     function loadTimeSlots(dayId) {
+        // Pokud je dayId null, undefined nebo 0, použijeme $firstDayId
+        if (!dayId || dayId === 0) {
+            dayId = {$firstDayId};
+        }
+
+        // Zabráníme výchozímu chování odkazu (přesměrování na href), pokud je JS dostupný
+        event.preventDefault();
+        
+        // Nejprve odstraníme třídu "active" ze všech dnů
+        var allDays = document.querySelectorAll('.day-name');
+        allDays.forEach(function(day) {
+            day.classList.remove('active');
+        });
+
+        // Najdeme odkaz podle ID
+        var link = document.querySelector('#dayLink' + dayId);
+
+        // Deaktivujeme odkaz - odstraníme href a přidáme třídu "disabled"
+        if (link) {
+            link.classList.add('disabled');  // Přidáme třídu pro vizuální deaktivaci
+            link.style.pointerEvents = 'none'; // Zakáže klikání na odkaz
+        }
+
+        // Najdeme element s daným ID
+        var dayElement = document.querySelector('#dayLink' + dayId).closest('.day-name');
+
+        // Pokud element existuje, přidáme mu třídu "active"
+        if (dayElement) {
+            dayElement.classList.add('active');
+        }
+         console.log(dayId);
+        // Voláme AJAX pro načtení časových slotů
+        
+        $.nette.ajax({
+            url: {link getTimeSlots! $firstDayId}.replace("dayId={$firstDayId}&", "dayId=" + dayId + "&"), // Použití dayIdInt pro URL
+            timeout: 10000,  // 10 sekund
+            cache: false,  // Zakázání cachování
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',  // Specifikace AJAX hlavičky
+                'Content-Type': 'application/json'     // Specifikace typu obsahu, pokud posíláš data
+            },
+            success: function() {
+                console.log('Časové sloty byly načteny pro den ID: ' + dayId);
+            },
+            error: function(xhr, status, error) {
+                console.error('Chyba při načítání časových slotů: ', error);
+            }
+        });
+    
+   
+}
+// Uzavírací závorka funkce 
+</script>

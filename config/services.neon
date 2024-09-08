@@ -21,3 +21,4 @@ services:
     - App\Model\WeekModel
     - App\Model\DayModel
     - App\Service\CalendarDataService
+    - App\Service\RawWorkerCalendar

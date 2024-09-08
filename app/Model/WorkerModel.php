@@ -108,5 +108,19 @@ class WorkerModel extends BaseModel {
 
         return $result;
     }
+    
+    public function getWorkerLocation(int $workerId): ?ActiveRow
+    {
+        $workerLocation = $this->database->table(self::TABLE_WORKER_LOCATIONS)
+            ->where(self::COLUMN_WORKER_ID, $workerId)
+            ->where(self::COLUMN_BANNED, 0) // Zajišťuje, že vybíráme pouze nezabanovanou lokaci
+            ->fetch();
+
+        if ($workerLocation) {
+            return $this->locationModel->getLocationById($workerLocation->{self::COLUMN_LOCATION_ID_IN_WORKER_LOCATIONS});
+        }
+
+        return null;
+    }
 }
 

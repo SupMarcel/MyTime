@@ -2,81 +2,67 @@
 
 // app/Router/RouterFactory.php
 
+declare(strict_types=1);
+
 namespace App\Router;
 
 use Nette;
+use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
 
 final class RouterFactory
 {
     use Nette\StaticClass;
 
+    /**
+     * Vytváří a vrací seznam routovacích pravidel pro aplikaci.
+     * @return RouteList výsledný router pro aplikaci
+     */
     public static function createRouter(): RouteList
     {
         $router = new RouteList;
-        
-           // Přidání trasy pro WorkerCalendarPresenter
+
+        // Specifické trasy pro různé moduly a presentery
         $router->addRoute('worker/calendar', 'Worker:WorkerCalendar:default');
         $router->addRoute('worker-calendar/addData', 'Worker:WorkerCalendar:addData');
         $router->addRoute('worker-calendar/clearData', 'Worker:WorkerCalendar:clearData');
+                 
+        $router->addRoute('admin/register', 'Admin:AdminRegistration:signUp');
+        $router->addRoute('admin/sign-in', 'Admin:AdminRegistration:signIn');
+        
+        $router->addRoute('chief/register', 'Chief:ChiefRegistration:signUp');
+        $router->addRoute('chief/sign-in', 'Chief:ChiefRegistration:signIn');
+        
+        $router->addRoute('worker/register', 'Worker:WorkerRegistration:signUp');
+        $router->addRoute('worker/sign-in', 'Worker:WorkerRegistration:signIn');
+        
+        $router->addRoute('client/register', 'Client:ClientRegistration:signUp');
+        $router->addRoute('client/sign-in', 'Client:ClientRegistration:signIn');
 
+        // Přidání univerzální trasy pro všechny moduly, presentery a akce
+        $router->addRoute('<module>/<presenter>/<action>[/<id>]', [
+            'module' => [
+                Route::FILTER_TABLE => [
+                    'worker' => 'Worker',
+                    'admin' => 'Admin',
+                    'chief' => 'Chief',
+                    'client' => 'Client',
+                ]
+            ],
+            'presenter' => 'WorkerDashboard',
+            'action' => 'default',
+        ]);
+        
+        /* $router->addRoute('worker/<presenter>/<action>', [
+            "module" => "Worker",
+            "presenter" => "WorkerDashboard",
+            "action" => "default" 
+        ]); */
+
+        // Root trasa (hlavní stránka)
         $router->addRoute('', 'Common:HomePage:default');
-
-        // Admin registration routes
-        $router->addRoute('admin/register', [
-            'module' => 'Admin',
-            'presenter' => 'AdminRegistration',
-            'action' => 'signUp'
-        ]);
-        $router->addRoute('admin/sign-in', [
-            'module' => 'Admin',
-            'presenter' => 'AdminRegistration',
-            'action' => 'signIn'
-        ]);
-
-        // Chief registration routes
-        $router->addRoute('chief/register', [
-            'module' => 'Chief',
-            'presenter' => 'ChiefRegistration',
-            'action' => 'signUp'
-        ]);
-        $router->addRoute('chief/sign-in', [
-            'module' => 'Chief',
-            'presenter' => 'ChiefRegistration',
-            'action' => 'signIn'
-        ]);
-
-        // Worker registration routes
-        $router->addRoute('worker/register', [
-            'module' => 'Worker',
-            'presenter' => 'WorkerRegistration',
-            'action' => 'signUp'
-        ]);
-        $router->addRoute('worker/sign-in', [
-            'module' => 'Worker',
-            'presenter' => 'WorkerRegistration',
-            'action' => 'signIn'
-        ]);
-
-        // Client registration routes
-        $router->addRoute('client/register', [
-            'module' => 'Client',
-            'presenter' => 'ClientRegistration',
-            'action' => 'signUp'
-        ]);
-        $router->addRoute('client/sign-in', [
-            'module' => 'Client',
-            'presenter' => 'ClientRegistration',
-            'action' => 'signIn'
-        ]);
-
-        // General routes
-        $router->addRoute('<module>/<presenter>/<action>', [
-            'module' => 'Common',
-            'presenter' => 'HomePage',
-            'action' => 'default'
-        ]);
 
         return $router;
     }
 }
+

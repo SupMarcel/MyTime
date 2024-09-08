@@ -81,3 +81,39 @@ days:
         sa: "Sa"
         su: "Su"
 
+calendar:
+    header: "Calendar for %s - %s from %s to %s"
+    
+dayModel:
+    dayOfWeek:
+        monday: "Monday"
+        tuesday: "Tuesday"
+        wednesday: "Wednesday"
+        thursday: "Thursday"
+        friday: "Friday"
+        saturday: "Saturday"
+        sunday: "Sunday"
+    month:
+        january: "January"
+        february: "February"
+        march: "March"
+        april: "April"
+        may: "May"
+        june: "June"
+        july: "July"
+        august: "August"
+        september: "September"
+        october: "October"
+        november: "November"
+        december: "December"
+
+    week: "Week"
+    day:
+      mo: "Mon"
+      tu: "Tue"
+      we: "Wed"
+      th: "Thu"
+      fr: "Fri"
+      sa: "Sat"
+      su: "Sun"    
+

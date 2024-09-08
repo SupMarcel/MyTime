@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 class LocationModel extends BaseModel
@@ -33,6 +34,12 @@ class LocationModel extends BaseModel
         ])->getPrimary();
     }
 
+    /**
+     * Získá lokaci podle ID.
+     *
+     * @param int $locationId
+     * @return ?Nette\Database\Table\ActiveRow
+     */
     public function getLocationById(int $locationId): ?ActiveRow
     {
         return $this->getById($locationId);
@@ -77,3 +84,4 @@ class LocationModel extends BaseModel
             ->order(self::COLUMN_NAME);
     }
 }
+

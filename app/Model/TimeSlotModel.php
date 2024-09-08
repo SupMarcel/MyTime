@@ -134,4 +134,11 @@ class TimeSlotModel extends BaseModel
 
         return $slotsData;
     }
+    
+    public function getTimeSlotsForDay(int $dayId): array
+    {
+        return $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_DAY_ID, $dayId)
+            ->fetchAll(); // Vrací pole objektů
+    }
 }
