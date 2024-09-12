@@ -122,5 +122,15 @@ class WorkerModel extends BaseModel {
 
         return null;
     }
+    
+        /**
+     * Zjistí, zda uživatel s daným ID má roli "worker".
+     * @param int $userId
+     * @return bool
+     */
+    public function isUserWorker(int $userId): bool
+    {
+        return $this->roleModel->userHasRole($userId, RoleModel::ROLE_WORKER);
+    }
 }
 

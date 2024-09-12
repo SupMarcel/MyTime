@@ -4,19 +4,25 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/var/www/html/my-time-for-you/app/Model/TimeSlotModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/ClientModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/DayModel.php</file>
             <file>file:/var/www/html/my-time-for-you/www/css/style.css</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/WorkerDashboard/default.latte</file>
             <file>file:/var/www/html/my-time-for-you/app/Router/RouterFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/UserModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/WorkerModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/MonthModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Services/CalendarDataService.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/OrderModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerCalendarPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerDashboardPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/www/js/nette.ajax.js</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/WeekModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/YearModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/StatusModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Services/RawWorkerCalendar.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/BaseModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/RoleModel.php</file>
         </group>
     </open-files>
 </project-private>

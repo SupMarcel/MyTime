@@ -141,4 +141,20 @@ class TimeSlotModel extends BaseModel
             ->where(self::COLUMN_DAY_ID, $dayId)
             ->fetchAll(); // Vrací pole objektů
     }
+    
+     // Nová metoda pro získání časových slotů podle weekId
+    public function getTimeSlotsForWeek(int $weekId): array
+    {
+        return $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_WEEK_ID, $weekId)
+            ->fetchAll(); // Vrací pole objektů
+    }
+
+    // Nová metoda pro získání časových slotů podle monthId
+    public function getTimeSlotsForMonth(int $monthId): array
+    {
+        return $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_MONTH_ID, $monthId)
+            ->fetchAll(); // Vrací pole objektů
+    }
 }
