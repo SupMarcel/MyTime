@@ -119,3 +119,7 @@ dayModel:
       fr: "Pá"
       sa: "So"
       su: "Ne"    
+
+errors:
+        StatusCalendar:
+            not_a_worker: "Pro vytvoření Vašeho objednávacího kalendáře se musíte zaregistrovat jako pracovník (worker)."

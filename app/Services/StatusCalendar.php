@@ -6,8 +6,13 @@ use App\Model\DayModel;
 use App\Model\WorkerModel;
 use App\Model\OrderModel;
 use App\Model\MonthModel;
+use App\Model\UserModel;
+use App\Model\LocationModel;
+use App\Model\TimeSlotModel;
+use App\Model\BaseModelWithTranslator;
 use Nette\Database\Explorer;
 use Nette\Localization\ITranslator;
+
 
 class StatusCalendar extends BaseModelWithTranslator
 {
@@ -15,20 +20,29 @@ class StatusCalendar extends BaseModelWithTranslator
     private WorkerModel $workerModel;
     private OrderModel $orderModel;
     private MonthModel $monthModel;
-
+    private UserModel $userModel;
+    private LocationModel $locationModel;
+    private TimeSlotModel $timeSlotModel;
+    
     public function __construct(
         Explorer $database,
         ITranslator $translator,
         DayModel $dayModel,
         WorkerModel $workerModel,
         OrderModel $orderModel,
-        MonthModel $monthModel
+        MonthModel $monthModel,
+        UserModel $userModel,
+        LocationModel $locationModel,
+        TimeSlotModel $timeSlotModel    
     ) {
         parent::__construct($database, $translator);
         $this->dayModel = $dayModel;
         $this->workerModel = $workerModel;
         $this->orderModel = $orderModel;
         $this->monthModel = $monthModel;
+        $this->userModel = $userModel;
+        $this->locationModel = $locationModel;
+        $this->timeSlotModel = $timeSlotModel;
     }
 
     /**
@@ -106,21 +120,27 @@ class StatusCalendar extends BaseModelWithTranslator
         return $result;
     }
     
-    public function generateCalendarStructure(int $userId): array
+    public function generateCalendarStructure(int $userId, ?int $locationId = null): array
     {
         // Kontrola, jestli je uživatel worker
         if (!$this->workerModel->isUserWorker($userId)) {
             // Přeložená zpráva pro uživatele, který není worker
-            throw new \Exception($this->translator->translate('messages.errors.not_a_worker'));
+            throw new \Exception($this->translator->translate('messages.errors.StatusCalendar.not_a_worker'));
         }
 
         $calendar = [];
 
-        // Získání uživatele a jeho lokace
+        // Získání uživatele a případně jeho lokace, pokud není zadaná
         $user = $this->userModel->getById($userId);
-        $location = $this->workerModel->getWorkerLocation($userId);
 
-        if (!$user || !$location) {
+        // Pokud nebyl zadán locationId, zjistíme lokaci
+        if (empty($locationId)) {
+            $location = $this->workerModel->getSingleWorkerLocation($userId);
+            $locationId = $location ? $location->{LocationModel::COLUMN_ID} : null;
+        }
+
+        // Kontrola, zda existuje uživatel a lokace
+        if (!$user || !$locationId) {
             throw new \Exception("User or location not found.");
         }
 
@@ -128,7 +148,7 @@ class StatusCalendar extends BaseModelWithTranslator
         $calendar['calendar_title_main'] = sprintf(
             $this->translator->translate('messages.calendar.header.main'),
             $user->{UserModel::COLUMN_USERNAME},
-            $location->{LocationModel::COLUMN_NAME}
+            $this->locationModel->getLocationById($locationId)->{LocationModel::COLUMN_NAME}
         );
         $calendar['calendar_title_dates'] = sprintf(
             $this->translator->translate('messages.calendar.header.dates'),
@@ -190,5 +210,6 @@ class StatusCalendar extends BaseModelWithTranslator
 
         return $calendar;
     }
+
 
 }

@@ -132,5 +132,29 @@ class WorkerModel extends BaseModel {
     {
         return $this->roleModel->userHasRole($userId, RoleModel::ROLE_WORKER);
     }
+    
+    private function doesWorkerHaveMultipleLocations(int $workerId): bool
+    {
+        // Zjistíme počet lokací, ve kterých pracovník působí
+        $locationCount = $this->database->table(self::TABLE_WORKER_LOCATIONS)
+            ->where(self::COLUMN_WORKER_ID, $workerId)
+            ->where(self::COLUMN_BANNED, 0) // Pouze nezabanované lokace
+            ->count();
+
+        // Pokud má pracovník více než jednu lokaci, vrátíme true
+        return $locationCount > 1;
+    }
+    
+    public function getSingleWorkerLocation(int $workerId): ?ActiveRow
+    {
+        if ($this->doesWorkerHaveMultipleLocations($workerId)) {
+            throw new \Exception('Worker is assigned to multiple locations. Please specify a location.');
+        }
+
+        // Získání lokace pracovníka (pokud má pouze jednu lokaci)
+        return $this->getWorkerLocation($workerId);
+    }
+
+
 }
 

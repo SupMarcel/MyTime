@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Nette\Database\Explorer;
+use App\Model\TimeSlotModel;
 
 class OrderModel extends BaseModel
 {
@@ -12,13 +13,19 @@ class OrderModel extends BaseModel
     const COLUMN_TIME_SLOT_ID = 'time_slot_id';
     const COLUMN_STATUS_ID = 'status_id';
     const COLUMN_CLIENT_ID = 'client_id';
+    const COLUMN_LOCATION_ID = 'location_id';
 
     private WorkerModel $workerModel;
+    private TimeSlotModel $timeSlotModel;
 
-    public function __construct(Explorer $database, WorkerModel $workerModel)
+    public function __construct(Explorer $database,
+                                WorkerModel $workerModel,
+                                TimeSlotModel $timeSlotModel
+    )
     {
         parent::__construct($database);
         $this->workerModel = $workerModel;
+        $this->timeSlotModel = $timeSlotModel;
     }
 
     /**
@@ -29,12 +36,23 @@ class OrderModel extends BaseModel
      * @param int $workerId
      * @return int ID nově přidaného orderu
      */
-    public function addFreeOrder(int $slotId, int $workerId): int
+    public function addFreeOrder(int $slotId, int $workerId, ?int $locationId = null): int
     {
+        // Pokud není locationId zadáno, získáme ho z pracovníka
+        if (empty($locationId)) {
+            $location = $this->workerModel->getSingleWorkerLocation($workerId);
+            $locationId = $location ? $location->{LocationModel::COLUMN_ID} : null;
+        }
+
+        if ($locationId === null) {
+            throw new \Exception('Location could not be determined.');
+        }
+
         return $this->addAndReturnId([
             self::COLUMN_WORKER_ID => $workerId,
             self::COLUMN_TIME_SLOT_ID => $slotId,
-            self::COLUMN_STATUS_ID => StatusModel::FREEID, // Použití konstanty FREEID ze StatusModel
+            self::COLUMN_LOCATION_ID => $locationId,
+            self::COLUMN_STATUS_ID => StatusModel::FREEID,
             self::COLUMN_CLIENT_ID => null,
         ]);
     }

@@ -115,5 +115,12 @@ dayModel:
       th: "Thu"
       fr: "Fri"
       sa: "Sat"
-      su: "Sun"    
+      su: "Sun"
+
+errors:
+    StatusCalendar:
+        not_a_worker: "To create your booking calendar, you need to register as a worker."
+
+
+    
 

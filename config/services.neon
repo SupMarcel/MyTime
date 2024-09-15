@@ -20,5 +20,7 @@ services:
     - App\Model\MonthModel
     - App\Model\WeekModel
     - App\Model\DayModel
+    - App\Model\OrderModel
     - App\Service\CalendarDataService
     - App\Service\RawWorkerCalendar
+    - App\Service\StatusCalendar

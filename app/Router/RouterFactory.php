@@ -24,6 +24,7 @@ final class RouterFactory
 
         // Specifické trasy pro různé moduly a presentery
         $router->addRoute('worker/calendar', 'Worker:WorkerCalendar:default');
+      //  $router->addRoute('worker/mycalendar', 'Worker:MyCalendar:default');
         $router->addRoute('worker-calendar/addData', 'Worker:WorkerCalendar:addData');
         $router->addRoute('worker-calendar/clearData', 'Worker:WorkerCalendar:clearData');
                  
