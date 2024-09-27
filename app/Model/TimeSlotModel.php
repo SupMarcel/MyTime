@@ -142,6 +142,26 @@ class TimeSlotModel extends BaseModel
             ->fetchAll(); // Vrací pole objektů
     }
     
+    public function getSimplifiedTimeSlotsForDay(int $dayId): array
+    {
+        // Získáme všechny časové sloty pro daný den a vybereme pouze sloupce id a show
+        $timeSlots = $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_DAY_ID, $dayId)
+            ->select(self::COLUMN_ID . ', ' . self::COLUMN_SHOW)
+            ->fetchAll();
+
+        // Převedeme výsledek na pole polí obsahujících pouze klíče 'id' a 'show'
+        $result = [];
+        foreach ($timeSlots as $timeSlot) {
+            $result[] = [
+                'id' => $timeSlot->{self::COLUMN_ID},
+                'show' => $timeSlot->{self::COLUMN_SHOW},
+            ];
+        }
+
+        return $result;
+}
+    
      // Nová metoda pro získání časových slotů podle weekId
     public function getTimeSlotsForWeek(int $weekId): array
     {
@@ -156,5 +176,25 @@ class TimeSlotModel extends BaseModel
         return $this->database->table(self::TABLE_NAME)
             ->where(self::COLUMN_MONTH_ID, $monthId)
             ->fetchAll(); // Vrací pole objektů
+    }
+    
+    public function getSimplifiedTimeSlot(int $slotId): array
+    {
+        // Získáme řádek z tabulky time_slots podle slotId
+        $timeSlot = $this->database->table(self::TABLE_NAME)
+            ->select(self::COLUMN_ID . ', ' . self::COLUMN_SHOW)
+            ->where(self::COLUMN_ID, $slotId)
+            ->fetch();
+
+        // Pokud slot nebyl nalezen, vyhodíme výjimku
+        if (!$timeSlot) {
+            throw new \Exception("Time slot with ID $slotId not found.");
+        }
+
+        // Vrátíme pole s klíči 'id' a 'show'
+        return [
+            'id' => $timeSlot->{self::COLUMN_ID},
+            'show' => $timeSlot->{self::COLUMN_SHOW}
+        ];
     }
 }

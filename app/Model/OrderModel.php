@@ -3,7 +3,9 @@
 namespace App\Model;
 
 use Nette\Database\Explorer;
+use App\Model\WorkerModel;
 use App\Model\TimeSlotModel;
+use App\Model\StatusModel;
 
 class OrderModel extends BaseModel
 {
@@ -20,8 +22,7 @@ class OrderModel extends BaseModel
 
     public function __construct(Explorer $database,
                                 WorkerModel $workerModel,
-                                TimeSlotModel $timeSlotModel
-    )
+                                TimeSlotModel $timeSlotModel)
     {
         parent::__construct($database);
         $this->workerModel = $workerModel;
@@ -47,7 +48,7 @@ class OrderModel extends BaseModel
         if ($locationId === null) {
             throw new \Exception('Location could not be determined.');
         }
-
+        bdump($slotId);
         return $this->addAndReturnId([
             self::COLUMN_WORKER_ID => $workerId,
             self::COLUMN_TIME_SLOT_ID => $slotId,
@@ -94,31 +95,16 @@ class OrderModel extends BaseModel
      * @param int $workerId
      * @return int|null Vrací status_id nebo null, pokud kombinace neexistuje.
      */
-    public function getStatusIdForWorkerSlot(int $slotId, int $workerId): ?int
+    public function getStatusIdForWorkerSlot(int $slotId, int $workerId): int
     {
         $order = $this->database->table(self::TABLE_NAME)
             ->where(self::COLUMN_WORKER_ID, $workerId)
             ->where(self::COLUMN_TIME_SLOT_ID, $slotId)
             ->fetch();
-
-        return $order ? $order->{self::COLUMN_STATUS_ID} : null;
+        return intval(!empty($order) ? $order->{self::COLUMN_STATUS_ID} : StatusModel::UNAVAILABLEID);
     }
 
-    /**
-     * Kombinovaná funkce, která nejprve zkontroluje, zda kombinace worker_id a slot_id existuje,
-     * a pokud ano, vrátí status_id této kombinace. Pokud kombinace neexistuje, vrátí UNAVAILABLEID.
-     * @param int $slotId
-     * @param int $workerId
-     * @return int
-     */
-    public function getStatusOrUnavailable(int $slotId, int $workerId): int
-    {
-        if ($this->doesWorkerSlotExist($slotId, $workerId)) {
-            return $this->getStatusIdForWorkerSlot($slotId, $workerId) ?? $this->statusModel::UNAVAILABLEID;
-        }
-
-        return $this->statusModel::UNAVAILABLEID;
-    }
+    
     
     // Privátní funkce pro získání statusu podle typu slotů (den, týden, měsíc)
     private function getStatusForWorkerAndTimeSlots(int $workerId, array $timeSlots): int
@@ -186,6 +172,30 @@ class OrderModel extends BaseModel
     {
         $timeSlots = $this->timeSlotModel->getTimeSlotsForMonth($monthId);
         return $this->getStatusForWorkerAndTimeSlots($workerId, $timeSlots);
+    }
+    
+    public function deleteOldFreeOrders(int $workerId): void
+    {
+        $currentDateTime = new \DateTime();
+
+    // Dotaz pomocí explicitního SQL JOIN mezi orders a time_slots
+    $ordersToDelete = $this->database->query('
+        SELECT orders.*
+        FROM orders
+        JOIN time_slots ON orders.time_slot_id = time_slots.id
+        WHERE orders.worker_id = ? 
+          AND orders.status_id = ? 
+          AND time_slots.end_time < ?', 
+        $workerId, 
+        StatusModel::FREEID, 
+        $currentDateTime
+    );
+
+    // Zkontrolujeme, zda byly nalezeny nějaké záznamy k mazání
+    foreach ($ordersToDelete as $order) {
+        // Smažeme jednotlivé záznamy z tabulky
+        $this->database->table(self::TABLE_NAME)->where(self::COLUMN_ID, $order->id)->delete();
+    }
     }
 }
 

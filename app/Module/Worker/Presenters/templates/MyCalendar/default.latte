@@ -7,7 +7,7 @@
 <!-- Odkaz na nette.ajax.js -->
 <script src="{$basePath}/js/nette.ajax.js"></script>
 
-<<div class="raw container">
+<div class="raw container">
     <div class="calendar rowData">
         <div class="header">
             <div class="calendar-header m-2">
@@ -15,11 +15,8 @@
                 <h5>{$calendarStructure['calendar_title_dates']}</h5>
             </div>
         </div>
-
         <!-- Flex container pro týdny -->
         <div class="week-complet">
-            {var $firstDayId = null}
-
             {foreach $calendarStructure['months'] as $monthName => $monthData}
                 {foreach $monthData['weeks'] as $weekName => $weekData}
                     <div class="week-column">
@@ -37,16 +34,14 @@
                              ">{$weekName}</div>
 
                         {foreach $weekData['days'] as $dayId => $dayData}
-                            {if $firstDayId === null}
-                                {var $firstDayId = $dayId}
-                            {/if}
-                            
+
                             <!-- Přidání třídy "unavailable-yellow" pro dny se statusem 3 -->
                             <div class="day-name 
                                  {if $dayData['status'] == 3}unavailable-yellow{/if}
                                  {if $dayData['status'] == 1}free-green{/if}
                                  {if $dayData['status'] == 2}ordered-red{/if}
                                  {if $dayData['status'] == 4}mix-blue{/if}
+                                 {if $dayId == $selectedDayId}active{/if}
                                  ">
                                 <a id="dayLink{$dayId}" n:href="getTimeSlots! $dayId" class="ajax">{$dayData['formatted']}</a>
                             </div>
@@ -56,111 +51,74 @@
             {/foreach}
         </div>
     </div>
+    <!-- Snippet pro časové sloty -->
+    <div n:snippetArea="slotContainer" >
+        {if isset($timeSlots) && $timeSlots}
+            <div n:snippet="timeSlotsSnippet" class="time-slots-container"> 
+                {foreach $timeSlots as $key => $slot}
+                   
+                    {control "slot-".$slot->id }
+                    
+                {/foreach}
+            </div>
+            <script>
 
-    <div class="time-slots">
-        <!-- Snippet pro časové sloty -->
-        <div n:snippet="timeSlotsSnippet">
-            {if isset($timeSlots) && $timeSlots}
-                <div class="time-slots-container">
-                    {foreach $timeSlots as $timeSlot}
-                        <div class="time-slot">
-                            {$timeSlot->show}
-                        </div>
-                    {/foreach}
-                </div>
-            {else}
-                <p>Pro tento den nejsou žádné časové sloty k dispozici.</p>
-            {/if}
-        </div>
-    </div>
-</div>
-
-
-<script>
-   // Funkce, která nahradí odkazy, odstraní signál a přidá onclick atribut
-    function replaceLinksWithJavaScript() {
-        // Najdeme všechny odkazy s třídou "ajax"
-        var links = document.querySelectorAll('.ajax');
-
+         var links = document.querySelectorAll('.ajax');
         links.forEach(function(link) {
             // Získáme ID dne z atributu "id"
-            var dayId = link.id.replace('dayLink', '');  // Odebereme část "dayLink" a zůstane pouze ID
+            var dayId = link.id.replace('dayLink', ''); // Odebereme část "dayLink" a zůstane pouze ID
 
             // Nahradíme href za # (prázdný odkaz s křížkem)
             link.setAttribute('href', '#');
-            
-            // Přidáme onclick funkci pro JavaScriptové načítání
+            // Přidáme onclick funkci pro JavaScriptové načítání slotů
             link.setAttribute('onclick', 'return loadTimeSlots(' + dayId + ');');
         });
         
-        $.nette.ajax({
-        url: {link getTimeSlots! $firstDayId},  // Použití dayIdInt pro URL
-        timeout: 10000,  // 10 sekund
-        cache: false,  // Zakázání cachování
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',  // Specifikace AJAX hlavičky
-            'Content-Type': 'application/json'     // Specifikace typu obsahu, pokud posíláš data
-        },
-        success: function() {
-            console.log('Časové sloty byly načteny pro den ID: ' + {$firstDayId});
-        },
-        error: function(xhr, status, error) {
-            console.error('Chyba při načítání časových slotů: ', error);
-        }
-    });
-    }
-
-    // Spuštění funkce po načtení stránky
-    window.onload = replaceLinksWithJavaScript;
-    
-     function loadTimeSlots(dayId) {
-        // Pokud je dayId null, undefined nebo 0, použijeme $firstDayId
-        if (!dayId || dayId === 0) {
-            dayId = {$firstDayId};
-        }
-
-        // Zabráníme výchozímu chování odkazu (přesměrování na href), pokud je JS dostupný
+        // Funkce pro načítání časových slotů AJAXem
+    function loadTimeSlots(dayId) {
         event.preventDefault();
-        
+
+        // Pokud je dayId null, undefined nebo 0, použijeme výchozí den
+        if (!dayId || dayId === 0) {
+            dayId = {$selectedDayId}; // Použití výchozího dne z PHP
+        }
+
         // Nejprve odstraníme třídu "active" ze všech dnů
         var allDays = document.querySelectorAll('.day-name');
         allDays.forEach(function(day) {
             day.classList.remove('active');
         });
 
-        // Najdeme odkaz podle ID
-        var link = document.querySelector('#dayLink' + dayId);
-
-        // Deaktivujeme odkaz - odstraníme href a přidáme třídu "disabled"
-        if (link) {
-            link.classList.add('disabled');  // Přidáme třídu pro vizuální deaktivaci
-            link.style.pointerEvents = 'none'; // Zakáže klikání na odkaz
-        }
-
-        // Najdeme element s daným ID
         var dayElement = document.querySelector('#dayLink' + dayId).closest('.day-name');
-
-        // Pokud element existuje, přidáme mu třídu "active"
         if (dayElement) {
             dayElement.classList.add('active');
         }
-         console.log(dayId);
-        // Voláme AJAX pro načtení časových slotů
         
+        let data = {
+            dayId: dayId
+        };
+        // AJAX volání pro načtení časových slotů
         $.nette.ajax({
-            url: {link getTimeSlots! $firstDayId}.replace("dayId={$firstDayId}&", "dayId=" + dayId + "&"), // Použití dayIdInt pro URL
-            timeout: 10000,  // 10 sekund
-            cache: false,  // Zakázání cachování
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',  // Specifikace AJAX hlavičky
-                'Content-Type': 'application/json'     // Specifikace typu obsahu, pokud posíláš data
-            },
+             type: 'POST',
+             url:{link getTimeSlots!},
+             data: data,
+          
             success: function() {
                 console.log('Časové sloty byly načteny pro den ID: ' + dayId);
+                
             },
             error: function(xhr, status, error) {
                 console.error('Chyba při načítání časových slotů: ', error);
             }
         });
+         
+
     }
 </script>
+        {else}
+            <p>Pro tento den nejsou žádné časové sloty k dispozici.</p>
+        {/if}
+    </div>
+
+
+

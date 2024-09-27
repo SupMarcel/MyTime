@@ -9,10 +9,11 @@ use App\Model\MonthModel;
 use App\Model\UserModel;
 use App\Model\LocationModel;
 use App\Model\TimeSlotModel;
+use App\Model\StatusModel; // Přidání StatusModelu
 use App\Model\BaseModelWithTranslator;
 use Nette\Database\Explorer;
 use Nette\Localization\ITranslator;
-
+use Nette\Utils\ArrayHash;
 
 class StatusCalendar extends BaseModelWithTranslator
 {
@@ -23,7 +24,8 @@ class StatusCalendar extends BaseModelWithTranslator
     private UserModel $userModel;
     private LocationModel $locationModel;
     private TimeSlotModel $timeSlotModel;
-    
+    private StatusModel $statusModel; // Přidání StatusModelu
+
     public function __construct(
         Explorer $database,
         ITranslator $translator,
@@ -33,7 +35,8 @@ class StatusCalendar extends BaseModelWithTranslator
         MonthModel $monthModel,
         UserModel $userModel,
         LocationModel $locationModel,
-        TimeSlotModel $timeSlotModel    
+        TimeSlotModel $timeSlotModel,
+        StatusModel $statusModel  // Přidání StatusModelu do konstruktoru
     ) {
         parent::__construct($database, $translator);
         $this->dayModel = $dayModel;
@@ -43,6 +46,7 @@ class StatusCalendar extends BaseModelWithTranslator
         $this->userModel = $userModel;
         $this->locationModel = $locationModel;
         $this->timeSlotModel = $timeSlotModel;
+        $this->statusModel = $statusModel;  // Uložení StatusModelu do vlastnosti třídy
     }
 
     /**
@@ -187,7 +191,6 @@ class StatusCalendar extends BaseModelWithTranslator
 
                 // Získání všech relevantních dní pro daný týden a měsíc
                 $days = $this->getDaysAndStatusesForWorker($userId, $monthId, $weekId);
-
                 // Iterace přes dny v týdnu a přidání do struktury kalendáře
                 foreach ($days as $dayData) {
                     $dayId = $dayData['id'];
@@ -198,8 +201,6 @@ class StatusCalendar extends BaseModelWithTranslator
                     $dayFormatted = $this->translator->translate('messages.dayModel.day.' . strtolower($dayRow->{DayModel::COLUMN_DAY_FROM_WEEK_SHORT}))
                         . ' ' . $dayRow->{DayModel::COLUMN_NUMBER_SHOW} . '.'
                         . str_pad($dayRow->{DayModel::COLUMN_MONTH_NUMBER_SHOW}, 2, '0', STR_PAD_LEFT) . '.';
-
-                    // Přidání dne se statusem
                     $calendar['months'][$monthName]['weeks'][$weekName]['days'][$dayId] = [
                         'formatted' => $dayFormatted,
                         'status' => $dayStatus
@@ -207,8 +208,43 @@ class StatusCalendar extends BaseModelWithTranslator
                 }
             }
         }
-
+        
+        
         return $calendar;
+    }
+    
+    public function getTimeSlotsWithStatusesForDay(int $dayId, int $userId): ArrayHash
+    {
+        // Získáme pole slotů s 'id' a 'show' pro daný den
+        $timeSlots = $this->timeSlotModel->getSimplifiedTimeSlotsForDay($dayId);
+        $this->orderModel->deleteOldFreeOrders($userId);
+        // Iterujeme přes všechny získané sloty
+        foreach ($timeSlots as &$slot) {
+            // Získáme status pro daný slot a uživatele pomocí metody getStatusOrUnavailable
+            $slot['status'] = $this->getStatusOrUnavailable($slot['id'], $userId);
+        }
+
+        // Vrátíme pole slotů se statusem
+        $timeSlots = ArrayHash::from($timeSlots);
+        return $timeSlots;
+    }
+    
+    private function getStatusOrUnavailable(int $slotId, int $workerId): int
+    {
+        if ($this->orderModel->doesWorkerSlotExist($slotId, $workerId)) {
+            return $this->orderModel->getStatusIdForWorkerSlot($slotId, $workerId) ?? $this->statusModel::UNAVAILABLEID;
+        }
+
+        return $this->statusModel::UNAVAILABLEID;
+    }
+    
+    public function getSingleTimeSlotWithStatus(int $slotId, int $userId): array
+    {
+        // Získáme časový slot a status pro konkrétní slotId
+        $slot = $this->timeSlotModel->getSimplifiedTimeSlot($slotId);
+        $slot['status'] = $this->orderModel->getStatusIdForWorkerSlot($slot['id'], $userId);
+
+        return $slot;
     }
 
 

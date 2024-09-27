@@ -201,6 +201,30 @@ class DayModel extends BaseModel
 
         return $totalColumns;
     }
+    
+    /**
+    * Vrátí ID dne na základě zadaného data (nebo aktuálního dne, pokud není zadáno).
+    *
+    * @param \DateTime|null $date Datum, pro které chceme najít ID dne (nepovinné, pokud není zadáno, použije se aktuální datum).
+    * @return int|null ID dne nebo null, pokud den nebyl nalezen.
+    */
+    public function getDayIdByDate(?\DateTime $date = null): ?int
+    {
+        // Pokud nebylo zadáno datum, použijeme aktuální datum
+        if ($date === null) {
+            $date = $this->currentDate;
+        }
+
+        // Vyhledání ID dne na základě roku, měsíce a čísla dne v měsíci
+        $dayRecord = $this->database->table(self::TABLE_NAME)
+            ->where(self::COLUMN_YEAR_NUMBER, $date->format('Y'))
+            ->where(self::COLUMN_MONTH_NUMBER_SHOW, $date->format('m'))
+            ->where(self::COLUMN_NUMBER_SHOW, $date->format('d'))
+            ->fetch();
+
+        // Pokud byl den nalezen, vrátíme jeho ID, jinak vracíme null
+        return $dayRecord ? $dayRecord->{self::COLUMN_ID} : null;
+    }
 
 
 

@@ -21,6 +21,9 @@ services:
     - App\Model\WeekModel
     - App\Model\DayModel
     - App\Model\OrderModel
+    - App\Model\StatusModel
     - App\Service\CalendarDataService
     - App\Service\RawWorkerCalendar
     - App\Service\StatusCalendar
+    - App\Module\Worker\Control\ISlotControlFactory
+    - App\Module\Worker\Control\SlotControl

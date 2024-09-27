@@ -1,0 +1,99 @@
+<div class="time-slot
+     {if $slot['status'] == 3} unavailable-yellow{/if}
+     {if $slot['status'] == 1} free-green{/if}
+     {if $slot['status'] == 2} ordered-red{/if}
+     {if $slot['status'] == 4} mix-blue{/if}
+     " n:snippet="SlotSnippet" >
+
+    <!-- Odkaz, který volá funkci handleProcessSlot s parametry slotId a status -->
+    <a 
+        id="slotLink{$slot['id']}"
+        data-status="{$slot['status']}"
+        n:href="processSlot! $slot['id'], $slot['status']"  
+        class="ajax-slot-link"
+        >
+        {$slot['show']}
+    </a>
+
+</div>
+
+
+    <script> 
+    function handleSlotAction(slotId, slotStatus) {
+        event.preventDefault(); // Zabráníme přesměrování
+
+        let data = {
+            slotId: slotId,
+            slotStatus: slotStatus
+        };
+
+        // AJAX volání pro zpracování slotu
+        $.nette.ajax({
+            type: 'POST',
+            url: {link processSlot!}, // Odkaz na signál v presenteru bez hardcodovaných parametrů
+            data: data,
+            success: function() {
+                console.log('Akce na slotu byla úspěšně provedena.');
+                // Zavoláme funkci pro aktualizaci HTML elementu
+                updateSlotElement(slotId, slotStatus);
+            },
+            error: function() {
+                console.error('Došlo k chybě při volání akce.');
+            }
+        });
+
+        return false; // Zabráníme výchozímu přesměrování
+    }
+
+    // Funkce pro nastavení onclick pro AJAX odkazy s třídou .ajax-slot-link
+    function addClickHandlers() {
+        document.querySelectorAll('.ajax-slot-link').forEach(function (link) {
+            if (link instanceof HTMLAnchorElement) {
+                var slotId = link.id.replace('slotLink', '');
+                var slotStatus = link.getAttribute('data-status');
+                link.setAttribute('href', '#');
+                link.setAttribute('onclick', 'return handleSlotAction(' + slotId + ', ' + slotStatus + ');');
+              } else {
+                console.warn("Expected HTMLAnchorElement, but got: ", link);
+            }
+        });
+    }
+
+    // Spuštění po prvotním načtení stránky
+    document.addEventListener('DOMContentLoaded', function () {
+        addClickHandlers();
+    });
+
+    // Spuštění po každém AJAXovém požadavku (používá nette.ajax.js)
+    $(document).on('ajaxComplete', function () {
+        addClickHandlers();
+    });
+    
+    // Funkce pro aktualizaci HTML elementu po úspěšném AJAX volání
+    function updateSlotElement(slotId, currentStatus) {
+        // Získáme element `div` pomocí jeho ID
+        let slotElement = document.getElementById('snippet-slot-' + slotId + '-SlotSnippet');
+        console.log(slotElement);
+        if (slotElement) {
+            // Změna třídy v závislosti na aktuální třídě
+            if (slotElement.classList.contains('unavailable-yellow')) {
+                slotElement.classList.remove('unavailable-yellow');
+                slotElement.classList.add('free-green');
+            } else if (slotElement.classList.contains('free-green')) {
+                slotElement.classList.remove('free-green');
+                slotElement.classList.add('unavailable-yellow');
+            }
+
+            // Získáme odkaz `a` uvnitř `div` a změníme atribut `data-status`
+            let linkElement = document.getElementById(`slotLink + slotId + `);
+            if (linkElement) {
+                let newStatus = currentStatus === 3 ? 1 : 3;
+                linkElement.setAttribute('data-status', newStatus);
+
+                // Také zaktualizujeme `onclick` pro volání nové funkce
+                linkElement.setAttribute('onclick', `return handleSlotAction( + slotId + ,  + status + );`);
+            }
+        }
+    }
+</script>
+
