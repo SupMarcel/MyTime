@@ -12,6 +12,7 @@ signUpForm:
     username: "Select a username:"
     email: "Your email:"
     password: "Create a password:"
+    create_password: "Create password:"
     image: "Image"
     description: "Description"
     locationName: "Location Name"
@@ -21,7 +22,8 @@ signUpForm:
     submit: "Sign Up"
     enter_username: "Please enter a username."
     enter_email: "Please enter an email."
-    enter_password: "Please enter a password."    
+    enter_password: "Please enter a password." 
+    confirm_password: "Enter your current password:"
     chiefDescription: "Chief Registration"
     adminDescription: "Admin Registration"
     workerDescription: "Worker Registration"
@@ -29,6 +31,22 @@ signUpForm:
     title: "Sign Up"
     phone: "Your phone number:"
     enter_phone: "Please enter a phone number."
+    addressGroup: "Location Address"
+    street: "Street"
+    numberOfStreet: "Street Number"
+    city: "City"
+    enter_city: "Please enter the city."
+    zipCode: "ZIP Code"
+    region: "Region"
+    state: "State"
+    enter_state: "Please enter the state."
+    latitude: "Latitude"
+    longitude: "Longitude"
+
+addLocationForm:
+    locationDetails: "Location Details"
+    addressDetails: "Address Details"
+    addLocation: "Add Location"
 
 general:
     protection: 'Please submit the form again (the security protection expired).'
@@ -54,6 +72,10 @@ homepage:
     adminRegistration: "Admin Registration"
     adminDescription: "Register to manage the entire system."
     logout: "Log Out"
+    chiefLocationsTitle: "List of Your Locations"
+    noLocations: "You don't have any registered locations yet."
+    addNewLocation: "Add New Location"
+    
 
 signinForm:
         email: "E-mail"
@@ -120,6 +142,10 @@ dayModel:
 errors:
     StatusCalendar:
         not_a_worker: "To create your booking calendar, you need to register as a worker."
+
+flashMessages:
+    registrationSuccess: "Registration was successful."
+    locationAddedSuccess: "Location was added successfully."
 
 
     

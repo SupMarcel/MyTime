@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Explorer;
 
 class ChiefModel extends BaseModel
 {
@@ -15,17 +16,22 @@ class ChiefModel extends BaseModel
     private RoleModel $roleModel;
     private LocationModel $locationModel;
     private WorkerModel $workerModel;
+    protected Explorer $database;
 
     public function __construct(
         UserModel $userModel,
         RoleModel $roleModel,
         LocationModel $locationModel,
-        WorkerModel $workerModel
-    ) {
+        WorkerModel $workerModel,
+        Explorer $database    
+    )
+    {
+        parent::__construct($database); // Zavolání konstruktoru BaseModel, který inicializuje $database
         $this->userModel = $userModel;
         $this->roleModel = $roleModel;
         $this->locationModel = $locationModel;
         $this->workerModel = $workerModel;
+        $this->database = $database;
     }
 
     public function addChief(
@@ -63,6 +69,29 @@ class ChiefModel extends BaseModel
             self::COLUMN_USER_ID => $userId,
         ]);
     }
+    
+    public function addChiefLocation(
+        int $userId,
+        string $locationName,
+        string $locationDescription,
+        ?string $locationImage = null,
+        ?int $addressId = null
+    ): void {
+        // Přidání nové provozovny pro existujícího uživatele (šéfa)
+        $locationId = $this->locationModel->addLocation(
+            $locationName,
+            $addressId,
+            $locationImage,
+            $locationDescription
+        );
+
+        // Zaznamenání location do tabulky chief_locations
+        $this->database->table(self::TABLE_CHIEF_LOCATIONS)->insert([
+            self::COLUMN_LOCATION_ID => $locationId,
+            self::COLUMN_USER_ID => $userId,
+        ]);
+    }
+
 
     public function removeLocation(int $locationId): void
     {
@@ -108,9 +137,18 @@ class ChiefModel extends BaseModel
 
     public function getChiefLocations(int $chiefId): array
     {
-        return $this->database->table(self::TABLE_CHIEF_LOCATIONS)
+        // Získání záznamů jako pole
+        $rows = $this->database->table(self::TABLE_CHIEF_LOCATIONS)
             ->where(self::COLUMN_USER_ID, $chiefId)
-            ->fetchPairs(self::COLUMN_LOCATION_ID, self::COLUMN_LOCATION_ID);
+            ->fetchAll();
+
+        // Vytvoření pole s ID provozovny jako klíč a názvem provozovny jako hodnotou
+        $locations = [];
+        foreach ($rows as $row) {
+            $locations[$row[self::COLUMN_LOCATION_ID]] = $row->ref('locations', self::COLUMN_LOCATION_ID)->name;
+        }
+
+        return $locations;
     }
 
     /**

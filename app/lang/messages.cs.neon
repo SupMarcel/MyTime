@@ -12,6 +12,7 @@ signUpForm:
     username: "Vyberte uživatelské jméno:"
     email: "Váš email:"
     password: "Vytvořte heslo:"
+    create_password: "Vytvořte heslo:"
     image: "Obrázek"
     description: "Popis"
     locationName: "Název provozovny"
@@ -22,6 +23,7 @@ signUpForm:
     enter_username: "Zadejte uživatelské jméno."
     enter_email: "Zadejte email."
     enter_password: "Zadejte heslo."
+    confirm_password: "Zadejte vaše aktuální heslo:"
     chiefDescription: "Registrace šéfa provozovny"
     adminDescription: "Registrace administrátora"
     workerDescription: "Registrace pracovníka"
@@ -29,6 +31,22 @@ signUpForm:
     title: "Registrace"
     phone: "Vaše telefonní číslo:"
     enter_phone: "Prosím, zadejte telefonní číslo."
+    addressGroup: "Adresa provozovny"
+    street: "Ulice"
+    numberOfStreet: "Číslo popisné"
+    city: "Město"
+    enter_city: "Prosím, zadejte město."
+    zipCode: "PSČ"
+    region: "Kraj"
+    state: "Stát"
+    enter_state: "Prosím, zadejte stát."
+    latitude: "Zeměpisná šířka"
+    longitude: "Zeměpisná délka"
+
+addLocationForm:
+    locationDetails: "Detaily provozovny"
+    addressDetails: "Adresa provozovny"
+    addLocation: "Přidat provozovnu"
 
 general:
     protection: 'Prosím znovu odeslat formulář (vypršela platnost ochrany).'
@@ -54,6 +72,10 @@ homepage:
     adminRegistration: "Registrace administrátora"
     adminDescription: "Registrace vám umožní spravovat celý systém."
     logout: "Odhlásit se"
+    chiefLocationsTitle: "Seznam vašich provozoven"
+    noLocations: "Zatím nemáte žádné registrované provozovny."
+    addNewLocation: "Přidat novou provozovnu"
+    
 
 signInForm:
     email: "Emailová adresa"
@@ -123,3 +145,7 @@ dayModel:
 errors:
         StatusCalendar:
             not_a_worker: "Pro vytvoření Vašeho objednávacího kalendáře se musíte zaregistrovat jako pracovník (worker)."
+
+flashMessages:
+    registrationSuccess: "Registrace byla úspěšná."
+    locationAddedSuccess: "Provozovna byla úspěšně přidána."

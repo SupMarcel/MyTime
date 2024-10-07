@@ -21,6 +21,7 @@ class UserModel extends BaseModel
     const COLUMN_CREATED_AT = 'created_at';
     const COLUMN_UPDATED_AT = 'updated_at';
     const COLUMN_LANGUAGE_ID = 'languageId';
+    const COLUMN_ADDRESS_ID = 'address_id';
 
     public function addUser(array $data): ActiveRow
     {

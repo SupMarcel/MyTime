@@ -83,5 +83,16 @@ class LocationModel extends BaseModel
             ->where(self::COLUMN_BANNED, true)
             ->order(self::COLUMN_NAME);
     }
+    
+    /**
+    * Vrací asociativní pole [id => name] všech lokací.
+    *
+    * @return array Pole ve formátu [id => name]
+    */
+   public function getLocationsForSelect(): array
+   {
+       return $this->getAll()
+           ->fetchPairs(self::COLUMN_ID, self::COLUMN_NAME);
+   }
 }
 

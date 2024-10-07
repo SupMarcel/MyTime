@@ -8,7 +8,6 @@ use Nette;
 use App\Model\UserFacade;
 use Contributte\Translation\Translator;
 
-
 abstract class BaseRegistrationPresenter extends Nette\Application\UI\Presenter
 {
     protected Translator $translator;
@@ -21,6 +20,14 @@ abstract class BaseRegistrationPresenter extends Nette\Application\UI\Presenter
         $this->userFacade = $userFacade;
     }
 
+    /**
+     * Získá ID přihlášeného uživatele.
+     * @return int|null
+     */
+    protected function getUserId(): ?int
+    {
+        return $this->getUser()->isLoggedIn() ? $this->getUser()->getId() : null;
+    }
     
         protected function getUserData(): ?array
     {

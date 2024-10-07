@@ -15,6 +15,7 @@ services:
     - App\Forms\WorkerSignUpFormFactory
     - App\Forms\ChiefSignUpFormFactory
     - App\Forms\AdminSignUpFormFactory
+    - App\Forms\AddLocationFormFactory
     - App\Model\TimeSlotModel
     - App\Model\YearModel
     - App\Model\MonthModel

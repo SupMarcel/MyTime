@@ -3,16 +3,52 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/var/www/html/my-time-for-you/app/Model/TimeSlotModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/FormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/BaseRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Client/Presenters/ClientRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/BaseModelWithTranslator.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Chief/Presenters/ChiefRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/UserModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/WorkerModel.php</file>
             <file>file:/var/www/html/my-time-for-you/config/services.neon</file>
             <file>file:/var/www/html/my-time-for-you/app/Model/OrderModel.php</file>
-            <file>file:/var/www/html/my-time-for-you/app/Model/TimeSlotModel.php</file>
-            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Control/templates/SlotControl.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/ActivityModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/ClientSignUpFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerCalendarPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/AdminModel.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Control/ISlotControlFactory.php</file>
-            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/MyCalendar/default.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/WorkerRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/WeekModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/LanguageModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/WorkerSignUpFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/ChiefModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Services/RawWorkerCalendar.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/BaseModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/UserFacade.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/ChiefSignUpFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/DayModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/HomepagePresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/AdminSignUpFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Admin/Presenters/AdminRegistrationPresenter.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Control/templates/SlotControl.latte</file>
+            <file>file:/var/www/html/my-time-for-you/www/css/style.css</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Common/Presenters/templates/HomePage/default.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/SignInFormFactory.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Control/SlotControl.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/lang/messages.en.neon</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/AddLocationFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/WorkerRegistration/signUp.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/AdressModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Forms/SignUpFormFactory.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/lang/messages.cs.neon</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/MyCalendar/default.latte</file>
             <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/MyCalendarPresenter.php</file>
             <file>file:/var/www/html/my-time-for-you/app/Services/StatusCalendar.php</file>
-            <file>file:/var/www/html/my-time-for-you/app/Model/BaseModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/LocationModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/CategoryModel.php</file>
+            <file>file:/var/www/html/my-time-for-you/app/Module/Worker/Presenters/templates/WorkerRegistration/signIn.latte</file>
+            <file>file:/var/www/html/my-time-for-you/app/Model/RoleModel.php</file>
         </group>
     </open-files>
 </project-private>

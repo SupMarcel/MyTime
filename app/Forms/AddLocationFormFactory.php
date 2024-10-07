@@ -9,7 +9,7 @@ use App\Model\ChiefModel;
 use App\Model\RoleModel;
 use Contributte\Translation\Translator;
 
-class ChiefSignUpFormFactory extends SignUpFormFactory
+class AddLocationFormFactory extends SignUpFormFactory
 {
     private ChiefModel $chiefModel;
     private RoleModel $roleModel;
@@ -24,12 +24,11 @@ class ChiefSignUpFormFactory extends SignUpFormFactory
     public function create(callable $onSuccess, ?array $user = null): Form
     {
         $form = $this->factory->create();
-        $form->addGroup($this->translator->translate('messages.signUpForm.chiefDescription'));
 
-        // Přidání základních polí pro obě varianty (nová registrace / doplnění role)
-        $this->addCommonFields($form, $user, !empty($user));
+        // Přidání základních polí pro přihlášeného uživatele
+        $this->addCommonFields($form, $user, true); // Použijeme `true` pro `isRoleOnly`, protože uživatel je již registrován
 
-        // Přidání specifických polí pro Chiefa
+        // Přidání specifických polí pro novou provozovnu
         $form->addText('location_name', $this->translator->translate('messages.signUpForm.locationName'))
             ->setRequired($this->translator->translate('messages.signUpForm.enter_location_name'));
 
@@ -40,8 +39,8 @@ class ChiefSignUpFormFactory extends SignUpFormFactory
             ->setRequired(false);
 
         // Přidání adresních polí
-        $form->addGroup($this->translator->translate('messages.signUpForm.addressGroup'));
-
+        $form->addGroup($this->translator->translate('messages.addLocationForm.addressDetails'));
+        
         $form->addText('street', $this->translator->translate('messages.signUpForm.street'))
             ->setRequired(false);
 
@@ -60,7 +59,7 @@ class ChiefSignUpFormFactory extends SignUpFormFactory
         $form->addText('state', $this->translator->translate('messages.signUpForm.state'))
             ->setRequired($this->translator->translate('messages.signUpForm.enter_state'));
 
-        // Latitude a Longitude jsou skrytá pole pro JavaScript
+        // Skrytá pole pro JavaScript
         $form->addText('latitude')
             ->setRequired(false)
             ->setHtmlType('hidden')
@@ -71,13 +70,20 @@ class ChiefSignUpFormFactory extends SignUpFormFactory
             ->setHtmlType('hidden')
             ->getLabelPrototype()->setName(''); // Skrytí labelu
 
-        // Přidání pole pro heslo (přesunuto na správné místo před tlačítkem)
-        $this->addPasswordField($form, !empty($user));
+        // Potvrzení hesla
+        $this->addPasswordField($form, true); // Použití metody z `SignUpFormFactory`
 
-        $form->addSubmit('send', $this->translator->translate('messages.signUpForm.signUp'));
+        // Tlačítko pro odeslání
+        $form->addSubmit('send', $this->translator->translate('messages.addLocationForm.addLocation'));
 
         $form->onSuccess[] = function (Form $form, \stdClass $data) use ($onSuccess, $user): void {
-            // Přidání nové adresy vždy, bez ohledu na to, zda je uživatel nový nebo stávající
+            // Ověření aktuálního hesla pro přidání nové provozovny
+            if (!password_verify($data->currentPassword, $user['password'])) {
+                $form->addError($this->translator->translate('messages.signUpForm.incorrect_password'));
+                return;
+            }
+
+            // Přidání nové adresy
             $addressId = $this->chiefModel->addAddress([
                 'street' => $data->street,
                 'number_of_street' => $data->number_of_street,
@@ -89,42 +95,17 @@ class ChiefSignUpFormFactory extends SignUpFormFactory
                 'longitude' => $data->longitude,
             ]);
 
-            // Pokud uživatel již existuje (je přihlášený)
-            if (!empty($user)) {
-                // Ověření aktuálního hesla pro přidání nové role
-                if (!password_verify($data->currentPassword, $user['password'])) {
-                    $form->addError($this->translator->translate('messages.signUpForm.incorrect_password'));
-                    return;
-                }
-
-                // Přidání role "chief"
-                $this->roleModel->addRoleToUser($user['id'], RoleModel::ROLE_CHIEF);
-
-                // Přidání nové provozovny k existujícímu uživateli
-                $this->chiefModel->addChiefLocation(
-                    $user['id'],
-                    $data->location_name,
-                    $data->location_description,
-                    $data->location_image,
-                    $addressId
-                );
-            } else {
-                // Přidání nového Chiefa a jeho lokace (včetně vytvoření nového uživatele)
-                $this->chiefModel->addChief(
-                    $data->username,
-                    $data->email,
-                    $data->password,
-                    $data->phone,
-                    $data->location_name,
-                    $data->location_description,
-                    $data->location_image,
-                    $addressId
-                );
-            }
+            // Přidání nové provozovny pro existujícího šéfa
+            $this->chiefModel->addChiefLocation(
+                $user['id'],
+                $data->location_name,
+                $data->location_description,
+                $data->location_image,
+                $addressId
+            );
 
             $onSuccess();
         };
-
 
         return $form;
     }

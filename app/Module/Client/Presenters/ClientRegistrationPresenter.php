@@ -23,17 +23,25 @@ final class ClientRegistrationPresenter extends BaseRegistrationPresenter
         $this->clientSignUpFactory = $clientSignUpFactory;
     }
 
+    /**
+     * Vytvoří komponentu registračního formuláře pro klienta.
+     */
     protected function createComponentSignUpForm(): Form
     {
         $user = $this->getUserData();
-        return $this->clientSignUpFactory->createClientForm(function () {
+        return $this->chiefSignUpFactory->create(function () {
             $this->flashMessage('Registration successful.', 'success');
-            $this->redirect('Homepage:');
+            $this->redirect(':Common:HomePage:');
         }, $user);
-    }
+}
 
+
+    /**
+     * Vytvoří komponentu přihlašovacího formuláře.
+     */
     protected function createComponentSignInForm(): Form
     {
+        // Vytvoření přihlašovacího formuláře
         return $this->clientSignUpFactory->createSignInForm(function () {
             $this->flashMessage('Sign in successful.', 'success');
             $this->redirect('Homepage:');
@@ -42,7 +50,6 @@ final class ClientRegistrationPresenter extends BaseRegistrationPresenter
 
     public function renderSignUp(): void
     {
-        // Specifická logika pro registraci klienta
+        // Specifická logika pro registraci klienta (může obsahovat zobrazení detailů šablony nebo jiné ovládání)
     }
 }
-

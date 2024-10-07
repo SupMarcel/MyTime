@@ -37,7 +37,23 @@
             </div>
         {/if}
 
-        {if !$isChief}
+        {if $isChief}
+            <h2>{$translator->translate('messages.homepage.chiefLocationsTitle')}</h2>
+
+            {if !empty($chiefLocations)}
+                <ul>
+                {foreach $chiefLocations as $locationId => $locationName}
+                    <li>{$locationName}</li>
+                {/foreach}
+                </ul>
+            {else}
+                <p>{$translator->translate('messages.homepage.noLocations')}</p>
+            {/if}
+
+            <a href="{link ':Chief:ChiefRegistration:addLocation'}" class="btn btn-secondary">
+                {$translator->translate('messages.homepage.addNewLocation')}
+            </a>
+        {else}
             <div>
                 <a href="{link ':Chief:ChiefRegistration:signUp'}" class="btn btn-primary">
                     {$translator->translate('messages.homepage.chiefRegistration')}

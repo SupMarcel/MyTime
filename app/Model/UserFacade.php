@@ -97,6 +97,7 @@ class UserFacade
                 'email' => $user->email,
                 'phone' => $user->phone,
                 'image' => $user->image,
+                'password' => $user->password
             ];
         }
 

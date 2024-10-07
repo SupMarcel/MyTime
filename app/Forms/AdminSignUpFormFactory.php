@@ -4,35 +4,40 @@ namespace App\Forms;
 
 use Nette\Application\UI\Form;
 use App\Model\AdminModel;
-use Contributte\Translation\Translator; // Přidání správného use příkazu
+use App\Model\RoleModel;
+use Contributte\Translation\Translator;
 
 class AdminSignUpFormFactory extends SignUpFormFactory
 {
     private AdminModel $adminModel;
+    private RoleModel $roleModel;
 
-    public function __construct(FormFactory $factory, Translator $translator, AdminModel $adminModel)
+    public function __construct(FormFactory $factory, Translator $translator, AdminModel $adminModel, RoleModel $roleModel)
     {
         parent::__construct($factory, $translator);
         $this->adminModel = $adminModel;
+        $this->roleModel = $roleModel;
     }
 
-    public function create(callable $onSuccess, ?array $existingUser = null): Form
-    {
+    public function create(callable $onSuccess, ?array $user = null): Form
+    {       
         $form = $this->factory->create();
         $form->addGroup($this->translator->translate('messages.signUpForm.adminDescription'));
 
-        $this->addCommonFields($form, $existingUser);
+        $this->addCommonFields($form, $user, $user !== null);
 
-        $form->addPassword('password', $this->translator->translate('messages.signUpForm.password'))
-            ->setOption('description', sprintf($this->translator->translate('messages.signUpForm.passwordDescription'), AdminModel::PASSWORD_MIN_LENGTH))
-            ->setRequired($this->translator->translate('messages.signUpForm.enter_password'))
-            ->addRule($form::MIN_LENGTH, null, AdminModel::PASSWORD_MIN_LENGTH);
+        $this->addPasswordField($form, $user !== null);
 
         $form->addSubmit('send', $this->translator->translate('messages.signUpForm.signUp'));
 
-        $form->onSuccess[] = function (Form $form, \stdClass $data) use ($onSuccess, $existingUser): void {
-            if (!$existingUser) {
-                // Přidání nového administrátora
+        $form->onSuccess[] = function (Form $form, \stdClass $data) use ($onSuccess, $user): void {
+            if ($user !== null) {
+                if ($user && !password_verify($data->currentPassword, $user['password'])) {
+                    $form->addError($this->translator->translate('messages.signUpForm.incorrect_password'));
+                    return;
+                }
+                $this->roleModel->addRoleToUser($user['id'], RoleModel::ROLE_ADMINISTRATOR );
+            } else {
                 $this->adminModel->addAdmin($data->username, $data->email, $data->password, $data->phone);
             }
             $onSuccess();

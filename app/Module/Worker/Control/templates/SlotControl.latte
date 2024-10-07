@@ -35,7 +35,7 @@
             success: function() {
                 console.log('Akce na slotu byla úspěšně provedena.');
                 // Zavoláme funkci pro aktualizaci HTML elementu
-                updateSlotElement(slotId, slotStatus);
+               // updateSlotElement(slotId, slotStatus);
             },
             error: function() {
                 console.error('Došlo k chybě při volání akce.');
@@ -70,7 +70,7 @@
     });
     
     // Funkce pro aktualizaci HTML elementu po úspěšném AJAX volání
-    function updateSlotElement(slotId, currentStatus) {
+ /*   function updateSlotElement(slotId, currentStatus) {
         // Získáme element `div` pomocí jeho ID
         let slotElement = document.getElementById('snippet-slot-' + slotId + '-SlotSnippet');
         console.log(slotElement);
@@ -94,6 +94,6 @@
                 linkElement.setAttribute('onclick', `return handleSlotAction( + slotId + ,  + status + );`);
             }
         }
-    }
+    } */
 </script>
 
